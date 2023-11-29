@@ -20,5 +20,5 @@ public interface IDAO {
     <T> void remove(T entity);
 
     // Búsqueda y retorno de un registro por su ID con la clase de una entidad como parámetros
-    <T> T findById(Class<T> clazz, String id);
+    <T, ID> T findById(Class<T> clazz, ID id);
 }

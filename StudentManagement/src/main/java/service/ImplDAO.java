@@ -25,7 +25,7 @@ public class ImplDAO implements IDAO{
     }
 
     @Override
-    public <T> T findById(Class<T> clazz, String id) {
+    public <T, ID> T findById(Class<T> clazz, ID id) {
         EntityManager em = EntityManagerAdmin.getInstance();
         try {
             T entity = em.find(clazz,id);
