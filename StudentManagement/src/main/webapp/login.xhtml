@@ -6,18 +6,21 @@
     <title>Login</title>
     <!-- Enlace a head para usar Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
-
+    <link rel="stylesheet" href="https://primefaces.org/showcase/ui/primeicons.css" />
+    <link rel="stylesheet" type="text/css" href="main/java/resources/css/styles.css"/>
 </h:head>
 <h:body style="text-align: center; background-color: #f0f0f0;">
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave wave2"></div>
+    </div>
     <h:form id="formLogin" style="margin-top: 50px;">
-        <p:panel header="Iniciar Sesión" style="width: 350px; margin: 0 auto; border-radius: 10px;">
-            <p:graphicImage name="resources/images/uamlogo.png" style="width: 150px; height: 150px; border-radius: 50%; margin: 20px auto; display: block;"/>
+        <p:panel header="Iniciar Sesión" styleClass="login-panel">
+            <p:graphicImage name="resources/images/uamlogo.png" styleClass="login-logo"/>
             <h:panelGrid columns="2" style="margin-bottom: 20px;">
-                <h:outputLabel for="cif" value="CIF:" style="font-weight: bold;"/>
-                <p:inputText id="cif" value="#{loginBean.cif}" required="true" styleClass="login-input"/>
-
-                <h:outputLabel for="password" value="Contraseña:" style="font-weight: bold;"/>
-                <p:password id="password" value="#{loginBean.password}" required="true" feedback="true" styleClass="login-input"/>
+                <p:inputText id="cif" value="#{loginBean.cif}" required="true" styleClass="login-input" placeholder="CIF" feedbackIcon="pi pi-user"/>
+                <p:password id="password" value="#{loginBean.password}" required="true" feedback="true" styleClass="login-input" placeholder="Contraseña" feedbackIcon="pi pi-lock">
+                </p:password>
             </h:panelGrid>
             <p:commandButton value="Iniciar Sesión" action="#{loginBean.login}" styleClass="login-button" style="width: 100%;"/>
             <p:spacer height="10"/>
