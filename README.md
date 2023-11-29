@@ -1,2 +1,2 @@
 # GestorEstudiante
-Course project for OOP I. It is a student personal management system that provides different tools for organizing and monitoring events, notes, etc.
+Project to hand over the OOP I class based on Java. It will be a personal student management system, which will allow the student to categorize notes, set goals, mark events, organize a schedule each semester, among other tools...
