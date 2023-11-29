@@ -1,6 +1,8 @@
 package model;
 
 import customidentifiers.Identificator;
+import entities.Major;
+import entities.Student;
 import lombok.Getter;
 import lombok.Setter;
 

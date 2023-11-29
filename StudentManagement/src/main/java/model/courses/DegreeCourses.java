@@ -2,10 +2,10 @@ package model.courses;
 
 
 import customidentifiers.Identificator;
+import entities.Major;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import model.Major;
 
 @Entity
 @Table(name="Cursos_Universidad")
