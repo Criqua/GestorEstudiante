@@ -5,15 +5,18 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import lombok.Data;
 import service.ImplDAO;
 
 import entities.Student;
 
 @Named
 @RequestScoped
+@Data
 public class LoginBean {
 
     private String cif;
+
     protected String password;
 
     @Inject
