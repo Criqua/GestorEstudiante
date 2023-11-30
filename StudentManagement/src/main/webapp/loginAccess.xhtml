@@ -23,5 +23,17 @@
             <li></li>
         </ul>
     </div>
+
+    <h:form id="formLogin" style="margin-top: 50px;">
+        <p:panel header="Bienvenido">
+            <!-- Agrega esto en tu loginAccess.xhtml -->
+            <h:outputText value="¡Bienvenido, #{loginBean.nombreEstudiante}!" style="font-size: 24px;"/>
+            <p:spacer height="20"/>
+            <!-- Agrega más contenido según tus necesidades -->
+            <h:outputText value="Contenido adicional aquí" style="font-size: 18px;"/>
+            <p:spacer height="20"/>
+            <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" styleClass="logout-button" style="width: 150px;"/>
+        </p:panel>
+    </h:form>
 </h:body>
 </html>

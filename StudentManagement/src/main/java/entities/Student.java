@@ -33,7 +33,11 @@ public class Student {
     @Column(name = "Estado")
     private String status;
 
-  /*@ManyToMany
+    public String getFullName() {
+        return fullName;
+    }
+
+    /*@ManyToMany
     @JoinTable(
             name = "Carrera_Estudiante",
             joinColumns = @JoinColumn(name = "CIF"),

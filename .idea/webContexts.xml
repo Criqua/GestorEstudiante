@@ -5,6 +5,7 @@
       <map>
         <entry key="file://$PROJECT_DIR$/StudentManagement/src/main/webapp/WEB-INF/login.xhtml" value="file://$PROJECT_DIR$/StudentManagement/src/main/webapp/WEB-INF" />
         <entry key="file://$PROJECT_DIR$/StudentManagement/src/main/webapp/login.xhtml" value="file://$PROJECT_DIR$/StudentManagement/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/StudentManagement/src/main/webapp/loginAccess.xhtml" value="file://$PROJECT_DIR$/StudentManagement/src/main/webapp" />
       </map>
     </option>
   </component>
