@@ -18,4 +18,6 @@ public class Major {
 
     @ManyToMany(mappedBy = "majorList")
     private List<Student> studentMajorList;
-}*/
+
+
+ */
