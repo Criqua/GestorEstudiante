@@ -24,11 +24,21 @@ body {
 
 .login-input {
     width: 100%;
+    align-content: center;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+.login-input-container {
+    text-align: center;
+    align-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
 
 .login-input::placeholder {
     color: #888;

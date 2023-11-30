@@ -2,25 +2,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
-<h:head>
+
+<head>
     <title>Bienvenido</title>
-    <link rel="stylesheet" href="https://primefaces.org/showcase/ui/primeicons.css" />
-    <link rel="stylesheet" type="text/css" href="main/java/resources/css/styles.css"/>
-</h:head>
-<h:body style="text-align: center; background-color: #f0f0f0;">
-    <div class="ocean">
-        <div class="wave"></div>
-        <div class="wave wave2"></div>
+    <link rel="stylesheet" type="text/css" href="resources/css/burbujas.css"/>
+</head>
+
+<h:body>
+    <div class="area">
+        <ul class="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
     </div>
-    <h:form id="formLogin" style="margin-top: 50px;">
-        <p:panel header="Bienvenido" styleClass="welcome-panel">
-            <h:outputText value="¡Hola!" style="font-size: 24px;"/>
-            <p:spacer height="20"/>
-            <!-- Agrega más contenido según tus necesidades -->
-            <h:outputText value="Contenido adicional aquí" style="font-size: 18px;"/>
-            <p:spacer height="20"/>
-            <p:commandButton value="Cerrar Sesión" styleClass="logout-button" style="width: 150px;"/>
-        </p:panel>
-    </h:form>
 </h:body>
 </html>
