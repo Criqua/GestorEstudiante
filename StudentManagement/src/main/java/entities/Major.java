@@ -1,6 +1,4 @@
-package entities;
-
-import customidentifiers.Identificator;
+/*package entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,10 +9,13 @@ import java.util.List;
 @Table(name = "Carrera")
 @Getter
 @Setter
-public class Major extends Identificator {
+public class Major {
+    @Id
+    private String id;
+
     @Column(name = "Nombre")
     private String name;
 
     @ManyToMany(mappedBy = "majorList")
     private List<Student> studentMajorList;
-}
+}*/

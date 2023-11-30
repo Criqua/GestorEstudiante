@@ -18,7 +18,11 @@ body {
 
 .login-logo {
     width: 100%;
+<<<<<<< HEAD
     border-radius: 50%;
+=======
+    border-radius: 10%;
+>>>>>>> 0577957686a23f606ab77bcbbefcca68d61ce37a
     margin-bottom: 20px;
 }
 
