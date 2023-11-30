@@ -31,7 +31,7 @@ public class Student {
     private String profilePhoto;
 
     @Column(name = "Estado")
-    private int status;
+    private String status;
 
   /*@ManyToMany
     @JoinTable(
