@@ -5,8 +5,11 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="primeicons" level="application" />
+    <orderEntry type="library" name="css.gg" level="application" />
     <orderEntry type="library" name="primeicons" level="application" />
     <orderEntry type="library" name="tinymce" level="application" />
+    <orderEntry type="library" name="font-awesome" level="application" />
+    <orderEntry type="library" name="primeicons" level="application" />
+    <orderEntry type="library" name="font-awesome" level="application" />
   </component>
 </module>

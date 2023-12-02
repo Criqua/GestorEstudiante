@@ -21,21 +21,28 @@ import jakarta.annotation.PostConstruct;
 public class LoginBean implements Serializable {
 
     private String cif;
+    private String cif2;
     private String password;
-    private String nombreEstudiante; // Nueva propiedad para almacenar el nombre
+    private String nombreEstudiante;
 
     @PostConstruct
     public void init() {
         // Puedes realizar alguna inicialización aquí si es necesario
     }
+
     public String login() {
         final IDAO dao = new ImplDAO();
-        // Se busca al estudiante por su cif
         Student student = dao.findById(Student.class, cif);
 
         if (student != null && student.getPassword().equals(password)) {
-            // Almacenar el nombre del estudiante en la propiedad del bean
             nombreEstudiante = student.getFullName();
+            cif2 = student.getCIF();
+
+            // Imprimir en la consola
+            System.out.println("Inicio de sesión exitoso para " + nombreEstudiante + " con CIF: " + cif2);
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Inicio de sesión exitoso", "Bienvenido " + nombreEstudiante + " con CIF: " + cif2));
 
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("user", student);
             return "loginAccess.xhtml";

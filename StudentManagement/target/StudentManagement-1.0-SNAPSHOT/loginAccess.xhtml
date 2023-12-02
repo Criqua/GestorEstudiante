@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<head>
+    <title>Bienvenido</title>
+    <link rel="stylesheet" type="text/css" href="resources/css/burbujas.css"/>
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'/>
+</head>
+
+<h:body>
+    <div class="toolbox" style="position: absolute; top: 10px; right: 10px; z-index: 100;">
+        <h:form>
+            <p:commandButton value="User" styleClass="user-button" style="width: 100px;"/>
+            <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}" styleClass="logout-button" style="width: 100px;"/>
+        </h:form>
+    </div>
+
+
+    <div class="area" style="position: relative;">
+        <ul class="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <h:form id="formLogin" style="position: absolute; top: 50px; left: 50%; transform: translateX(-50%); text-align: center;">
+            <p:panel header="Bienvenido" style="background: transparent; border: none;">
+                <!-- Agrega esto en tu loginAccess.xhtml -->
+                <h:outputText value="¡Bienvenido, #{loginBean.nombreEstudiante}!" style="font-size: 24px; color: #fff;"/>
+                <p:spacer height="20"/>
+                <!-- Agrega más contenido según tus necesidades -->
+                <h:outputText value="Contenido adicional aquí" style="font-size: 18px; color: #fff;"/>
+                <p:spacer height="20"/>
+            </p:panel>
+        </h:form>
+    </div>
+</h:body>
+</html>

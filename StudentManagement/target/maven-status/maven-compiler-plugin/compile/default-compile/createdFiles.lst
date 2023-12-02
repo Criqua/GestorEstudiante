@@ -1,0 +1,8 @@
+entities\Notes.class
+beans\NoteBean.class
+service\ImplDAO.class
+beans\LoginBean.class
+service\IDAO.class
+service\EntityManagerAdmin.class
+com\smanagement\studentmanagement\HelloServlet.class
+entities\Student.class
