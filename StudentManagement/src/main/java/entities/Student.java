@@ -33,7 +33,7 @@ public class Student {
     @Column(name = "Estado")
     private boolean status;
 
-  @ManyToMany
+    @ManyToMany
     @JoinTable(
             name = "Carrera_Estudiante",
             joinColumns = @JoinColumn(name = "CIF_Estudiante"),

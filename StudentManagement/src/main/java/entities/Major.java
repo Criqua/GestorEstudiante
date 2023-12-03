@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class Major {
     @Id
+    @Column(name = "ID_Carrera")
     private String id;
 
     @Column(name = "Nombre")
