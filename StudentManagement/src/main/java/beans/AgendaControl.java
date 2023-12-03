@@ -30,10 +30,10 @@ public class AgendaControl implements Serializable {
         eventModel = new DefaultScheduleModel();
 
         Student student = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
-
+        String cifer = student.getCIF();
         if (student != null) {
             // Utiliza la interfaz IDAO para obtener los eventos del estudiante desde la base de datos
-            List<Agenda> agendaList = dao.getAll("SELECT a FROM Agenda a WHERE a.student.cif = :cif", Agenda.class);
+            List<Agenda> agendaList = dao.getAll("Agenda.findByCIF", Agenda.class);
 
             // Convierte los eventos de la base de datos a objetos DefaultScheduleEvent y agrégales al modelo
             for (Agenda agenda : agendaList) {
