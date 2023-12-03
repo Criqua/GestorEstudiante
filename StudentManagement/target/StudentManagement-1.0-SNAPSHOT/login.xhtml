@@ -4,6 +4,7 @@
       xmlns:p="http://primefaces.org/ui">
 <h:head>
     <title>Login</title>
+    <!-- Enlace a head para usar Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <link rel="stylesheet" href="https://primefaces.org/showcase/ui/primeicons.css" />
     <link rel="stylesheet" type="text/css" href="resources/css/styles.css"/>
@@ -15,15 +16,15 @@
     </div>
     <h:form id="formLogin" style="margin-top: 50px; display: flex; justify-content: center; align-items: center; height: 100vh;">
         <p:panel header="Iniciar Sesión" styleClass="login-panel">
-            <p:graphicImage name="/images/uamlogo.png" styleClass="login-logo"/>
-            <h:panelGrid columns="1" styleClass="login-input-container">
-                <div class="login-input-container">
-                    <i class="pi pi-user login-icon"></i>
+            <p:graphicImage name="resources/images/uamlogo.png" styleClass="login-logo"/>
+            <h:panelGrid columns="1" style="margin-bottom: 20px; text-align: center;">
+                <div style="position: relative;">
                     <p:inputText id="cif" value="#{loginBean.cif}" required="true" styleClass="login-input" placeholder="CIF" />
+                    <i class="pi pi-user login-icon" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;"></i>
                 </div>
-                <div class="login-input-container">
-                    <i class="pi pi-lock login-icon"></i>
+                <div style="position: relative;">
                     <p:password id="password" value="#{loginBean.password}" required="true" styleClass="login-input" placeholder="Contraseña" />
+                    <i class="pi pi-lock login-icon" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;"></i>
                 </div>
             </h:panelGrid>
             <p:commandButton value="Iniciar Sesión" action="#{loginBean.login}" styleClass="login-button" style="width: 100%;"/>

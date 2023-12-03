@@ -3,8 +3,7 @@ package entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Agenda")
@@ -12,7 +11,7 @@ import java.time.LocalTime;
 public class Agenda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_Apunte")
+    @Column(name = "ID_Evento")
     private Long id;
 
     @ManyToOne
@@ -26,14 +25,8 @@ public class Agenda {
     private String description;
 
     @Column(name = "Fecha_inicio")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "Fecha_fin")
-    private LocalDate endDate;
-
-    @Column(name = "Hora_inicio")
-    private LocalTime startTime;
-
-    @Column(name = "Hora_fin")
-    private LocalTime endTime;
+    private LocalDateTime endDate;
 }

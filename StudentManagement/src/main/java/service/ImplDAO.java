@@ -1,10 +1,12 @@
 package service;
 
+import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 
+@Named("implDAO")
 public class ImplDAO implements IDAO{
     @Override
     public <T> List<T> getAll(String namedQuery, Class<T> clazz) {
