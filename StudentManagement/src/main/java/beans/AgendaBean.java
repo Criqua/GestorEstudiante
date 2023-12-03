@@ -18,7 +18,7 @@ import java.io.Serializable;
 import java.util.List;
 @Named
 @RequestScoped
-public class AgendaControl implements Serializable {
+public class AgendaBean implements Serializable {
     @Inject
     @Named("implDAO")
     private IDAO dao;
