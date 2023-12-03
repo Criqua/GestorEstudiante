@@ -31,14 +31,19 @@ public class Student {
     private String profilePhoto;
 
     @Column(name = "Estado")
-    private int status;
+    private boolean status;
 
-  /*@ManyToMany
+  @ManyToMany
     @JoinTable(
             name = "Carrera_Estudiante",
-            joinColumns = @JoinColumn(name = "CIF"),
-            inverseJoinColumns = @JoinColumn(name = "ID_Carrera"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"CIF", "ID_Carrera"})
+            joinColumns = @JoinColumn(name = "CIF_Estudiante"),
+            inverseJoinColumns = @JoinColumn(name = "ID_Carrera")
     )
-    private List<Major> majorList;*/
+    private List<Major> majorList;
+
+    @OneToMany(mappedBy = "student")
+    private List<Notes> notesList;
+
+    @OneToMany(mappedBy = "student")
+    private List<Agenda> agendaList;
 }

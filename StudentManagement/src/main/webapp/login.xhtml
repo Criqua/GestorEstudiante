@@ -30,6 +30,8 @@
             <p:commandButton value="Iniciar Sesión" action="#{loginBean.login}" styleClass="login-button" style="width: 100%;"/>
             <p:spacer height="10"/>
             <p:messages id="messages" showDetail="false" showSummary="true" closable="true"/>
+            <!-- Utiliza p:growl para mostrar mensajes -->
+            <p:growl id="growl" showDetail="false" sticky="true"/>
         </p:panel>
     </h:form>
 </h:body>
