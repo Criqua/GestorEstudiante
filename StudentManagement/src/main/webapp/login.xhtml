@@ -23,7 +23,7 @@
                     <i class="pi pi-user login-icon" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;"></i>
                 </div>
                 <div style="position: relative;">
-                    <p:password id="password" value="#{loginBean.password}" required="true" styleClass="login-input" placeholder="Contraseña" />
+                    <p:password id="toggle" value="#{loginBean.password}" toggleMask="true" redisplay="true" required="true" styleClass="login-input" placeholder="Contraseña" />
                     <i class="pi pi-lock login-icon" style="position: absolute; top: 50%; transform: translateY(-50%); left: 10px;"></i>
                 </div>
             </h:panelGrid>
