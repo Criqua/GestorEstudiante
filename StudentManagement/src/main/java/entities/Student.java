@@ -44,6 +44,6 @@ public class Student {
     @OneToMany(mappedBy = "student")
     private List<Notes> notesList;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private List<Agenda> agendaList;
 }

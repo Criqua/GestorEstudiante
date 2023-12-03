@@ -21,4 +21,8 @@ public interface IDAO {
 
     // Búsqueda y retorno de un registro por su ID con la clase de una entidad como parámetros
     <T, ID> T findById(Class<T> clazz, ID id);
+
+    // Ejecución de una consulta nombrada con parámetros cualquiera y devuelve una lista de resultados.
+    // *
+    <T> List<T> get(String namedQuery, Class<T> clazz, Object... param);
 }

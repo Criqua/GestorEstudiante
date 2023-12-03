@@ -4,17 +4,24 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "Agenda")
 @Data
+@NamedQueries({
+        @NamedQuery(
+                name = "Agenda.FindEventsByCIF",
+                query = "SELECT a FROM Agenda a WHERE a.student.CIF = :cif"
+        )
+})
 public class Agenda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_Evento")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CIF")
     private Student student;
 

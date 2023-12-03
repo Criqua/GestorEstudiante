@@ -27,6 +27,27 @@ public class ImplDAO implements IDAO{
     }
 
     @Override
+    public <T> List<T> get(String namedQuery, Class<T> clazz, Object... param) {
+        EntityManager em = EntityManagerAdmin.getInstance();
+        try {
+            TypedQuery<T> query = em.createNamedQuery(namedQuery, clazz);
+            // Asegúrate de que la consulta nombrada tenga un parámetro llamado "cif"
+            if (param.length > 0) {
+                query.setParameter("cif", param[0]);
+            }
+            return query.getResultList();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            em.close();
+        }
+    }
+
+    @Override
     public <T, ID> T findById(Class<T> clazz, ID id) {
         EntityManager em = EntityManagerAdmin.getInstance();
         try {
