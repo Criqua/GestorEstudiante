@@ -17,6 +17,7 @@ import service.IDAO;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @Named
@@ -32,6 +33,7 @@ public class AgendaBean implements Serializable {
     private List<Agenda> agendaList;
 
     private String newEventTitle;
+    private String newEventDescription;
     private java.util.Date newEventStartDate;
     private java.util.Date newEventEndDate;
 
@@ -55,10 +57,10 @@ public class AgendaBean implements Serializable {
             eventModel.addEvent(event);
         }
     }
-
     public void addEvent() {
         DefaultScheduleEvent<?> newEvent = new DefaultScheduleEvent<>();
         newEvent.setTitle(newEventTitle);
+        newEvent.setDescription(newEventDescription);
         LocalDateTime startDateTime = newEventStartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         LocalDateTime endDateTime = newEventEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
@@ -76,7 +78,9 @@ public class AgendaBean implements Serializable {
         agenda.setStartDate(newEvent.getStartDate());
         agenda.setEndDate(newEvent.getEndDate());
 
-        dao.save(agenda);  // Supongamos que tienes un método save en tu DAO
+        dao.save(agenda);
+        System.out.println("ID asignado: " + agenda.getId());
+
 
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Evento agregado con éxito", null);
         FacesContext.getCurrentInstance().addMessage(null, message);

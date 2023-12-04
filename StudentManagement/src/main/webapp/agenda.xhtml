@@ -10,26 +10,33 @@
 <body>
 <p:growl id="messages" showDetail="true"/>
 
-<p:schedule id="schedule" value="#{agendaBean.eventModel}" widgetVar="myschedule" />
+<p:schedule id="schedule" value="#{agendaBean.eventModel}" widgetVar="myschedule"/>
 
-<p:dialog widgetVar="eventDialog" header="Event Details" showEffect="fade" hideEffect="fade">
+<!-- Botón para abrir la ventana de diálogo -->
+<p:commandButton value="Add Event" oncomplete="PF('eventDialog').show();" />
+
+<!-- Ventana de diálogo para agregar un nuevo evento -->
+<p:dialog widgetVar="eventDialog" header="Add Event" showEffect="fade" hideEffect="fade">
     <h:form>
         <h:panelGrid id="eventDetails" columns="2" cellpadding="7">
-            <p:outputLabel for="title" value="Titles" styleClass="font-bold"/>
+            <p:outputLabel for="title" value="Title" styleClass="font-bold"/>
             <p:inputText id="title" value="#{agendaBean.newEventTitle}" required="true"/>
 
+            <p:outputLabel for="description" value="Description" styleClass="font-bold"/>
+            <p:inputText id="description" value="#{agendaBean.newEventDescription}" required="false"/>
+
             <p:outputLabel for="from" value="From" styleClass="font-bold"/>
-            <p:calendar id="from" value="#{agendaBean.newEventStartDate}" pattern="dd/MM/yyyy HH:mm"
+            <p:calendar id="from" value="#{agendaBean.newEventStartDate}" required="true" pattern="yyyy/mm/dd HH:mm"
                         showTime="true" appendTo="@(body)"/>
 
             <p:outputLabel for="to" value="To" styleClass="font-bold"/>
-            <p:calendar id="to" value="#{agendaBean.newEventEndDate}" pattern="dd/MM/yyyy HH:mm"
+            <p:calendar id="to" value="#{agendaBean.newEventEndDate}" required="true" pattern="yyyy/mm/dd HH:mm"
                         showTime="true" appendTo="@(body)"/>
         </h:panelGrid>
 
         <div class="flex justify-content-between mt-3">
             <p:commandButton type="reset" value="Reset" styleClass="font-bold ui-button-outlined"/>
-            <p:commandButton value="Save" action="#{agendaBean.saveEvent}" update="schedule, messages"
+            <p:commandButton value="Save" action="#{agendaBean.addEvent}" update="schedule, messages"
                              oncomplete="PF('myschedule').update(); PF('eventDialog').hide();"/>
         </div>
     </h:form>
