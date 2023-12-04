@@ -1,18 +1,20 @@
 package entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "Agenda")
-@Data
+@Getter
+@Setter
 @NamedQueries({
         @NamedQuery(
                 name = "Agenda.FindEventsByCIF",
-                query = "SELECT a FROM Agenda a WHERE a.student.CIF = :cif"
+                query = "SELECT a FROM Agenda a LEFT JOIN FETCH a.student WHERE a.student.CIF = :cif"
         )
 })
 public class Agenda {
@@ -21,8 +23,8 @@ public class Agenda {
     @Column(name = "ID_Evento")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CIF")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "CIF", referencedColumnName = "CIF")
     private Student student;
 
     @Column(name = "Titulo")

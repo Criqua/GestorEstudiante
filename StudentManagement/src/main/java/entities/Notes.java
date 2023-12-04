@@ -1,7 +1,9 @@
 package entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,7 +11,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "Apuntes")
-@Data
+@Getter
+@Setter
 public class Notes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +27,7 @@ public class Notes {
     )
     private List<DegreeCourses> degreeCoursesList;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CIF", referencedColumnName = "CIF")
     private Student student;
 

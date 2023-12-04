@@ -1,13 +1,16 @@
 package entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
 @Table(name = "Estudiante")
-@Data
+@Getter
+@Setter
 @NamedQueries({
         @NamedQuery(name = "Student.FindByCIF", query="select e from Student e where e.CIF =?1")
 })
@@ -33,7 +36,7 @@ public class Student {
     @Column(name = "Estado")
     private boolean status;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "Carrera_Estudiante",
             joinColumns = @JoinColumn(name = "CIF_Estudiante"),
@@ -41,9 +44,9 @@ public class Student {
     )
     private List<Major> majorList;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
     private List<Notes> notesList;
 
-    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
     private List<Agenda> agendaList;
 }

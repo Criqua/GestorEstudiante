@@ -1,12 +1,15 @@
 package entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 @Entity
 @Table(name = "Carrera")
-@Data
+@Getter
+@Setter
 public class Major {
     @Id
     @Column(name = "ID_Carrera")
@@ -15,6 +18,6 @@ public class Major {
     @Column(name = "Nombre")
     private String name;
 
-    @ManyToMany(mappedBy = "majorList")
+    @ManyToMany(mappedBy = "majorList", fetch = FetchType.EAGER)
     private List<Student> studentMajorList;
 }
