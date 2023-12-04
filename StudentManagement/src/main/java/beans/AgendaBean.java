@@ -37,7 +37,7 @@ public class AgendaBean implements Serializable {
 
         // Obtén la lista de eventos de la agenda para el estudiante actual
         agendaList = dao.get("Agenda.FindEventsByCIF", Agenda.class, student.getCIF());
-        System.out.println(student.getCIF());
+
         // Convierte los eventos de la base de datos a objetos DefaultScheduleEvent y agrégales al modelo
         for (Agenda agenda : agendaList) {
 
@@ -48,8 +48,6 @@ public class AgendaBean implements Serializable {
                     .endDate(agenda.getEndDate())
                     .build();
             eventModel.addEvent(event);
-
-            System.out.println(agenda);
         }
     }
 }
