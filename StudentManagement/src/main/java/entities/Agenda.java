@@ -38,4 +38,5 @@ public class Agenda {
 
     @Column(name = "Fecha_fin")
     private LocalDateTime endDate;
+
 }

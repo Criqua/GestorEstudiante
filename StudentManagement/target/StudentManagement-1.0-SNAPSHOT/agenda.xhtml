@@ -10,6 +10,29 @@
 <body>
 <p:growl id="messages" showDetail="true"/>
 
-<p:schedule id="schedule" value="#{agendaBean.eventModel}"></p:schedule>
+<p:schedule id="schedule" value="#{agendaBean.eventModel}" widgetVar="myschedule" />
+
+<p:dialog widgetVar="eventDialog" header="Event Details" showEffect="fade" hideEffect="fade">
+    <h:form>
+        <h:panelGrid id="eventDetails" columns="2" cellpadding="7">
+            <p:outputLabel for="title" value="Titles" styleClass="font-bold"/>
+            <p:inputText id="title" value="#{agendaBean.newEventTitle}" required="true"/>
+
+            <p:outputLabel for="from" value="From" styleClass="font-bold"/>
+            <p:calendar id="from" value="#{agendaBean.newEventStartDate}" pattern="dd/MM/yyyy HH:mm"
+                        showTime="true" appendTo="@(body)"/>
+
+            <p:outputLabel for="to" value="To" styleClass="font-bold"/>
+            <p:calendar id="to" value="#{agendaBean.newEventEndDate}" pattern="dd/MM/yyyy HH:mm"
+                        showTime="true" appendTo="@(body)"/>
+        </h:panelGrid>
+
+        <div class="flex justify-content-between mt-3">
+            <p:commandButton type="reset" value="Reset" styleClass="font-bold ui-button-outlined"/>
+            <p:commandButton value="Save" action="#{agendaBean.saveEvent}" update="schedule, messages"
+                             oncomplete="PF('myschedule').update(); PF('eventDialog').hide();"/>
+        </div>
+    </h:form>
+</p:dialog>
 </body>
 </html>

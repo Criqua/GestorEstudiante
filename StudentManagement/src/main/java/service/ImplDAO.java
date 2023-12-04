@@ -118,4 +118,32 @@ public class ImplDAO implements IDAO{
         }
         return entityUpdate;
     }
+
+    @Override
+    public <T> T save(T entity) {
+        EntityManager em = EntityManagerAdmin.getInstance();
+
+        try {
+            em.getTransaction().begin();
+
+            if (em.contains(entity)) {
+                // Si la entidad ya está gestionada por el EntityManager, realiza la actualización
+                entity = em.merge(entity);
+            } else {
+                // Si la entidad no está gestionada, realiza la inserción
+                em.persist(entity);
+            }
+
+            em.getTransaction().commit();
+            return entity;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            return null;
+        } finally {
+            em.close();
+        }
+    }
 }

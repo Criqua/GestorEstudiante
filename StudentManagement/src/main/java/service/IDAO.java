@@ -1,5 +1,7 @@
 package service;
 
+import entities.Agenda;
+
 import java.util.List;
 
 /**
@@ -25,4 +27,6 @@ public interface IDAO {
     // Ejecución de una consulta nombrada con parámetros cualquiera y devuelve una lista de resultados.
     // *
     <T> List<T> get(String namedQuery, Class<T> clazz, Object... param);
+
+    <T> T save(T entity);
 }
