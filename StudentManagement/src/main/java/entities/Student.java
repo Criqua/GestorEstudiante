@@ -12,7 +12,14 @@ import java.util.List;
 @Getter
 @Setter
 @NamedQueries({
-        @NamedQuery(name = "Student.FindByCIF", query="select e from Student e where e.CIF =?1")
+        @NamedQuery(
+                name = "Student.FindByCIF",
+                query="select e from Student e where e.CIF =?1"
+        ),
+        @NamedQuery(
+                name = "Student.FindMajorsByCIF",
+                query="select e.majorList from Student e where e.CIF = ?1"
+        )
 })
 public class Student {
     @Id
