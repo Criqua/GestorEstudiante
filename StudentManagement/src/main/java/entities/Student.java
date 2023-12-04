@@ -56,4 +56,12 @@ public class Student {
 
     @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
     private List<Agenda> agendaList;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "Horario_Alumno",
+            joinColumns = @JoinColumn(name = "CIF"),
+            inverseJoinColumns = @JoinColumn(name = "ID_HoraSemestre")
+    )
+    private List<SemesterSchedule> semesterScheduleList;
 }

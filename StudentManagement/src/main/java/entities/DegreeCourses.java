@@ -1,13 +1,11 @@
 package entities;
 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "Cursos_Universidad")
@@ -23,4 +21,7 @@ public class DegreeCourses {
 
     @Column(name = "Nombre_Curso")
     private String courseName;
+
+    @OneToMany(mappedBy = "degreeCourses", fetch = FetchType.EAGER)
+    private List<CourseDetails> courseDetailsList;
 }

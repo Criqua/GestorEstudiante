@@ -13,6 +13,24 @@ import java.util.List;
 @Table(name = "Apuntes")
 @Getter
 @Setter
+@NamedStoredProcedureQuery(
+        name = "Notes.apunteAPapelera",
+        procedureName = "ApunteAPapelera",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "ID_Apunte")
+        }
+)
+@NamedStoredProcedureQuery(
+        name = "Notes.eliminarApunteEnLimite",
+        procedureName = "EliminarApunteEnLimite"
+)
+@NamedStoredProcedureQuery(
+        name = "Notes.recuperarApunte",
+        procedureName = "RecuperarApunte",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "ID_Apunte")
+        }
+)
 public class Notes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

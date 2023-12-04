@@ -4,6 +4,7 @@ import entities.Agenda;
 import entities.Student;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -13,12 +14,15 @@ import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleModel;
 import service.IDAO;
-import service.ImplDAO;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
+
 @Named
-@RequestScoped
+@ViewScoped
 @Data
 public class AgendaBean implements Serializable {
     @Inject
@@ -28,6 +32,11 @@ public class AgendaBean implements Serializable {
     private ScheduleModel eventModel;
 
     private List<Agenda> agendaList;
+
+    private String newEventTitle;
+    private String newEventDescription;
+    private java.util.Date newEventStartDate;
+    private java.util.Date newEventEndDate;
 
     @PostConstruct
     public void init() {
@@ -40,7 +49,6 @@ public class AgendaBean implements Serializable {
 
         // Convierte los eventos de la base de datos a objetos DefaultScheduleEvent y agrégales al modelo
         for (Agenda agenda : agendaList) {
-
             DefaultScheduleEvent<?> event = DefaultScheduleEvent.builder()
                     .title(agenda.getTitle())
                     .description(agenda.getDescription())
@@ -49,5 +57,32 @@ public class AgendaBean implements Serializable {
                     .build();
             eventModel.addEvent(event);
         }
+    }
+    public void addEvent() {
+        DefaultScheduleEvent<?> newEvent = new DefaultScheduleEvent<>();
+        newEvent.setTitle(newEventTitle);
+        newEvent.setDescription(newEventDescription);
+        LocalDateTime startDateTime = newEventStartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDateTime endDateTime = newEventEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        newEvent.setStartDate(startDateTime);
+        newEvent.setEndDate(endDateTime);
+
+        // Agrega el evento al modelo
+        eventModel.addEvent(newEvent);
+
+        // Guarda el nuevo evento en la base de datos
+        Agenda agenda = new Agenda();
+        agenda.setStudent((Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
+        agenda.setTitle(newEvent.getTitle());
+        agenda.setDescription(newEvent.getDescription());
+        agenda.setStartDate(newEvent.getStartDate());
+        agenda.setEndDate(newEvent.getEndDate());
+
+        dao.save(agenda);
+        System.out.println("ID asignado: " + agenda.getId());
+
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Evento agregado con éxito", null);
+        FacesContext.getCurrentInstance().addMessage(null, message);
     }
 }

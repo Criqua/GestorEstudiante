@@ -23,7 +23,7 @@ public class NoteBean implements Serializable {
 
     private List<Student> majorList;
 
-    private List<Student>
+    //private List<Student>
 
     Student student = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
 
