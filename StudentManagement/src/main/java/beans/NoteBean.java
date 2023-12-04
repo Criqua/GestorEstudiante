@@ -23,16 +23,19 @@ public class NoteBean implements Serializable {
 
     private List<Student> majorList;
 
-    //private List<Student>
-
     Student student = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
 
     // Método para inicializar un cuadro que enlista la(s) carrera(s) que cursa el estudiante
-    public void ComboBoxMajors(){
+    // CB: ComboBox
+    public void CB_Majors(){
         majorList = dao.get("Student.FindMajorsByCIF", Student.class, student.getCIF());
     }
 
-    public void ComboBoxMajorCourses(){
+    public void CB_coursedPeriods{
+
+    }
+
+    public void CB_assignedCourses(){
 
     }
 }
