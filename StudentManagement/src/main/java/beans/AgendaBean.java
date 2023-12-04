@@ -3,9 +3,12 @@ package beans;
 import entities.Agenda;
 import entities.Student;
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.NormalScope;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.annotation.View;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Data;
@@ -78,7 +81,7 @@ public class AgendaBean implements Serializable {
         agenda.setStartDate(newEvent.getStartDate());
         agenda.setEndDate(newEvent.getEndDate());
 
-        dao.save(agenda);
+        dao.insert(agenda);
         System.out.println("ID asignado: " + agenda.getId());
 
 
