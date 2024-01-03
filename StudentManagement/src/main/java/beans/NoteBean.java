@@ -2,6 +2,7 @@ package beans;
 
 import entities.Major;
 import entities.Student;
+import entities.StudentSemestralPeriod;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -31,8 +32,9 @@ public class NoteBean implements Serializable {
         majorList = dao.get("Student.FindMajorsByCIF", Student.class, student.getCIF());
     }
 
-    public void CB_coursedPeriods{
-
+    public void CB_coursedPeriods(){
+        List<StudentSemestralPeriod> coursedPeriods = dao.get("StudentSemestralPeriod.FindByCIF",
+                StudentSemestralPeriod.class, student.getCIF());
     }
 
     public void CB_assignedCourses(){
