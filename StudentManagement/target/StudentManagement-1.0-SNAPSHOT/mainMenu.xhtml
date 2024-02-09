@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Inicio | ClassMate</title>
+    <!-- Enlace a head para usar Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://primefaces.org/showcase/ui/primeicons.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css"/>
+    <!-- Recursos para utilización de fuentes de texto personalizadas -->
+    <link href="https://db.onlinewebfonts.com/c/9d23cda2fd2a195a8467e0967debd4d3?family=Cera+Round+Pro+Bold" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="resources/css/mMenu.css"/>
+</h:head>
+
+<script>
+    PrimeFaces.locales['es'] = {
+        closeText: 'Cerrar',
+        prevText: 'Anterior',
+        nextText: 'Siguiente',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+        dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+        weekHeader: 'Semana',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: '',
+        timeOnlyTitle: 'Sólo hora',
+        timeText: 'Tiempo',
+        hourText: 'Hora',
+        minuteText: 'Minuto',
+        secondText: 'Segundo',
+        millisecondText: 'Milisegundo',
+        currentText: 'Fecha actual',
+        ampm: false,
+        month: 'Mes',
+        week: 'Semana',
+        day: 'Día',
+        allDayText: 'Todo el día',
+        today: 'Hoy',
+        clear: 'Deseleccionar'
+    };
+</script>
+
+<h:body>
+    <div class="card">
+        <h:form>
+            <p:growl id="messages"/>
+
+            <ui:include src="navbar.xhtml"/>
+
+            <div style="width: 100%; margin-top: 20px; display: flex; justify-content: space-around;">
+
+                <!-- Contenido Izquierdo -->
+                <div style="width: 25%;">
+                    <p:panel styleClass="panel-depth">
+                        <h2>
+                            <i class="pi pi-calendar-times" style="font-size: 2rem"> </i> Agenda
+                        </h2>
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <p:datePicker id="menuAgenda" value="#{agendaBean.selectedDate}" inline="true"
+                                          locale="es" showTime="false" styleClass="shrunken-dp">
+                                <p:ajax event="dateSelect" listener="#{agendaBean.onDateSelect}" update="eventDetails"/>
+                            </p:datePicker>
+                        </div>
+                        <!-- Pie de página del panel -->
+                        <f:facet name="footer">
+                            <h:outputLink value="scheduleChart.xhtml" styleClass="schedule-link">Ver agenda completa</h:outputLink>
+                        </f:facet>
+                    </p:panel>
+                </div>
+
+                <!-- Contenido Central -->
+                <div style="width: 40%;">
+                    <p:panel styleClass="panel-depth" style="display: flex; flex-direction: column; align-items: stretch; padding: 0">
+                        <p:commandButton value="Mis Notas" icon="fa-regular fa-note-sticky"
+                                         styleClass="ui-button-raised ui-button-flat default-pf-fstyle panel-button"
+                                         style="width: 100%; font-weight: bold; color: #495057; text-align: left; vertical-align: bottom; font-size: 1.5em;">
+                        </p:commandButton>
+
+                        <p:dataTable value="#{noteBean.noteLists}" var="previewNotes" styleClass="preview-table">
+                            <p:column headerText="Notas recientes">
+                                #{previewNotes}
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                    <p:panel style="margin-top: 20px" styleClass="panel-depth">
+                        <p:commandButton value="Mis Checklists" icon="fa-solid fa-list-check"
+                                         styleClass="ui-button-raised ui-button-flat default-pf-fstyle panel-button"
+                                         style="width: 100%; font-weight: bold; color: #495057; text-align: left; vertical-align: bottom; font-size: 1.5em;">
+                        </p:commandButton>
+
+                        <p:panelGrid>
+                            <p:row styleClass="my-heading-row">
+                                Checklists recientes
+                            </p:row>
+                        </p:panelGrid>
+
+                        <p:carousel value="#{noteBean.checklistLists}" var="previewCl" styleClass="preview-carousel" >
+                            <h4 class="mb-1" style="text-align: center">#{previewCl}</h4>
+                        </p:carousel>
+                    </p:panel>
+                </div>
+
+                <div style="width: 25%;">
+                    <p:panel styleClass="panel-depth">
+                        <h2>
+                            <i class="fa-regular fa-clock" style="font-size: 2rem"> </i> Horario
+                        </h2>
+                        <h:outputText value="Cuerpo de Horario"/>
+                    </p:panel>
+                </div>
+            </div>
+
+            <p:divider style="margin-bottom: 8px" type="dashed"/>
+
+            <p:dialog widgetVar="eventDialog" header="Crear evento" showEffect="fade" hideEffect="fade">
+                <h:panelGrid id="eventDetails" columns="2" cellpadding="7">
+                    <p:outputLabel for="eventTitle" value="Título" styleClass="font-bold"/>
+                    <p:inputText id="eventTitle" value="#{agendaBean.event.title}" required="true"/>
+
+                    <p:outputLabel for="eventDescription" value="Descripción" styleClass="font-bold"/>
+                    <p:inputTextarea id="eventDescription" value="#{agendaBean.event.description}" required="false"/>
+
+                    <p:outputLabel for="eventStartDate" value="Fecha de inicio" styleClass="font-bold"/>
+
+                    <p:datePicker id="eventStartDate" value="#{agendaBean.event.startDate}"
+                                  pattern="dd/MM/yyyy" showTime="true"/>
+
+                    <p:outputLabel for="eventEndDate" value="Fecha de fin" styleClass="font-bold"/>
+                    <p:datePicker id="eventEndDate" value="#{agendaBean.event.endDate}"
+                                  pattern="dd/MM/yyyy" showTime="true"/>
+
+                    <p:commandButton value="Crear Evento"/>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p style="font-family: 'Cera Round Pro Bold', sans-serif; font-size: 12px; text-align: center">2023 ClassMate by Criqua</p>
+        </h:form>
+    </div>
+</h:body>
+</html>

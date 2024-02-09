@@ -1,32 +1,72 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-    <title>Ejemplo usando TinyMCE con Primefaces</title>
-
-    <!-- Inclusión de TinyMCE desde la CDN (red de distribución de contenido) -->
-    <script src="https://cdn.tiny.cloud/1/nrftj4uf24rcoyt2eawxvm37sk9dd0id9p4yn1r0y7skufrb/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-
-    <script>
-        // Se inicializa TinyMCE en un componente de texto
-        document.addEventListener("DOMContentLoaded", function(){
-            tinymce.init({
-                selector: "#myTextarea",
-                plugins:'advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste autocorrect code help wordcount',
-                toolbar: 'undo redo | blocks fontfamily fontsize | formatselect | ' +
-                    'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'image | removeformat | help',
-            });
-        });
-    </script>
+    <title>Mis notas | ClassMate</title>
+    <!-- Enlace a head para usar Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <!-- Enlace a head para usar Material Icons de Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="https://primefaces.org/showcase/ui/primeicons.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css"/>
+    <!-- Recursos para utilización de fuentes de texto personalizadas -->
+    <link href="https://db.onlinewebfonts.com/c/9d23cda2fd2a195a8467e0967debd4d3?family=Cera+Round+Pro+Bold" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="resources/css/material-symbols.css"/>
 </h:head>
 
 <h:body>
-    <!-- Componente de entrada de texto de PrimeFaces -->
-    <p:inputTextarea id="myTextarea" rows="28" cols="50" />
+    <div class="card">
+        <h:form id="notesForm">
+            <p:growl id="messages"/>
 
+            <ui:include src="navbar.xhtml"/>
+
+            <div style="margin-bottom: 20px"> </div>
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Nueva nota" icon="pi pi-plus" styleClass="ui-button-success" style="margin-right: .5rem"/>
+                    <p:commandButton value="Eliminar" icon="delete-file material-icons" styleClass="ui-button-danger"/>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:commandButton value="Papelera de reciclaje" icon="fa-regular fa-trash-can" styleClass="ui-button-help"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+            <p:panel styleClass="panel-depth" style="margin-top: 5px; margin-bottom: 5px">
+                <div class="card product card crud-demo">
+                    <p:dataView id="dVnotes" var="notes" widgetVar="dvNotes" value="#{noteBean.noteLists}" rows="12" paginator="true"
+                                paginatorPosition="top"
+                                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                currentPageReportTemplate="( {currentPage} de {totalPages} )"
+                                gridIcon="pi pi-th-large" listIcon="pi pi-list" flex="true">
+
+                        <f:facet name="header">
+                            <span style="font-weight: bold; margin-right: auto;">NOTAS</span>
+                            <div class="filter-container ui-input-icon-left" style="margin-right: 8px">
+                                <i class="pi pi-search"> </i>
+                                <p:inputText id="globalFilter" onkeyup="PF('dvNotes').filter()" placeholder="Buscar" />
+                            </div>
+                            <p:commandButton id="filterResults" icon="filter-tune material-icons" styleClass="ui-button-outlined ui-button-secondary"
+                                             style="margin-right: 10px; border-radius: 4px; background-color: white;"/>
+                            <p:tooltip for="filterResults" value="Filtros de resultado" position="bottom"/>
+                        </f:facet>
+
+                        <p:dataViewGridItem id="gridItem">
+                            <p:tooltip for="gridItem" value="Vista de cuardrícula" position="bottom"/>
+                        </p:dataViewGridItem>
+
+                        <p:dataViewListItem id="listItem">
+                            <p:tooltip for="listItem" value="Vista de lista" position="bottom"/>
+                        </p:dataViewListItem>
+
+                    </p:dataView>
+                </div>
+            </p:panel>
+        </h:form>
+    </div>
 </h:body>
 </html>

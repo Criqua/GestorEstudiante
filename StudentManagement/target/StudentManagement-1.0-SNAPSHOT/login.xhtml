@@ -1,35 +1,59 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <h:head>
-    <title>Login</title>
+    <title>Login | ClassMate</title>
     <!-- Enlace a head para usar Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <link rel="stylesheet" href="https://primefaces.org/showcase/ui/primeicons.css" />
-    <link rel="stylesheet" type="text/css" href="resource/css/styles.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css"/>
+    <!-- Recurso de animación css para bg -->
+    <link rel="stylesheet" type="text/css" href="resources/css/styles.css"/>
 </h:head>
 <h:body style="text-align: center; background-color: #f0f0f0;">
     <div class="ocean">
-        <div class="wave"></div>
-        <div class="wave wave2"></div>
+        <div class="wave"> </div>
+        <div class="wave wave2"> </div>
     </div>
     <h:form id="formLogin" style="margin-top: 50px; display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <p:panel header="Iniciar Sesión" styleClass="login-panel">
-            <p:graphicImage name="images/uamlogo.png" styleClass="login-logo"/>
-            <h:panelGrid columns="1" style="margin-bottom: 20px; text-align: center;">
-                <div style="position: relative;">
-                    <p:inputText id="cif" value="#{loginBean.cif}" required="true" styleClass="login-input" placeholder="CIF" />
+        <p:panel header="Ingresar a ClassMate" styleClass="login-panel" style="text-align: center;">
+            <div class="grid align-items-center justify-content-center" style="margin-bottom: 20px">
+                <div class="col-5 flex align-items-center justify-content-center">
+                    <!-- Icono a la izquierda -->
+                    <i class="fa-solid fa-chalkboard-user" style="font-size: 30px; margin-left: 90px"> </i>
                 </div>
-                <div style="position: relative;">
-                    <p:password id="toggle" value="#{loginBean.password}" toggleMask="true" redisplay="true" required="true" styleClass="login-input" placeholder="Contraseña" />
+                <!-- Divider en el centro vertical -->
+                <div class="col-2">
+                    <p:divider layout="vertical" style="height: 60px"/>
                 </div>
-            </h:panelGrid>
-            <p:commandButton value="Iniciar Sesión" action="#{loginBean.login}" styleClass="login-button" style="width: 100%;"/>
+
+                <div class="col-5 flex align-items-center justify-content-center">
+                    <!-- Imagen a la derecha -->
+                    <p:graphicImage name="images/uamlogo.png" styleClass="login-logo"/>
+                </div>
+            </div>
+            <div class="flexbox" style="margin: auto;">
+                <div style="position: relative;">
+                    <div class="ui-inputgroup">
+                        <span class="ui-inputgroup-addon"><i class="pi pi-user"> </i></span>
+                        <p:inputText id="cif" value="#{loginBean.cif}" required="true" placeholder="CIF" style="width: 200px"/>
+                    </div>
+
+                    <div class="ui-inputgroup" style="margin-top: 30px">
+                        <span class="ui-inputgroup-addon"><i class="pi pi-lock"> </i></span>
+                        <p:password id="toggle" value="#{loginBean.password}" toggleMask="true" redisplay="true" required="true"
+                                    placeholder="Contraseña" styleClass="input-password-box"/>
+                    </div>
+                </div>
+            </div>
+            <p:commandButton value="Iniciar Sesión" action="#{loginBean.login}" styleClass="login-button"
+                             style="margin-top: 30px; width: 100%; font-weight: 600"/>
             <p:spacer height="10"/>
             <p:messages id="messages" showDetail="false" showSummary="true" closable="true"/>
-            <!-- Utiliza p:growl para mostrar mensajes -->
-            <p:growl id="growl" showDetail="false" sticky="true"/>
+
+            <p:growl id="growl" showDetail="true" sticky="true"/>
         </p:panel>
     </h:form>
 </h:body>
