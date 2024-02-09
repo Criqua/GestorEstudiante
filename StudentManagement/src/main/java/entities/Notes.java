@@ -13,6 +13,12 @@ import java.util.List;
 @Table(name = "Apuntes")
 @Getter
 @Setter
+@NamedQueries({
+        @NamedQuery(
+                name = "Notes.FindByStudentAndStatus",
+                query = "SELECT n FROM Notes n WHERE n.student.CIF = :cif AND n.inTrash = :status"
+        )
+})
 public class Notes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

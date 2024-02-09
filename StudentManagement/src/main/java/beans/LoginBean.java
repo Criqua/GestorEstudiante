@@ -5,7 +5,8 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.primefaces.PrimeFaces;
 import service.IDAO;
 import service.ImplDAO;
@@ -17,7 +18,8 @@ import java.io.Serializable;
 
 @Named
 @ViewScoped
-@Data
+@Getter
+@Setter
 public class LoginBean implements Serializable {
 
     private String cif;
@@ -30,10 +32,10 @@ public class LoginBean implements Serializable {
         if (student != null && student.getPassword().equals(password)) {
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("user", student);
 
-            return "loginAccess.xhtml";
+            return "mainMenu.xhtml";
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error de inicio de sesión", "CIF o contraseña incorrectos."));
+                    "Error al iniciar sesión", "CIF o contraseña incorrectos. Favor vuelva a intentarlo."));
 
             PrimeFaces.current().ajax().update("formLogin:growl");
 
