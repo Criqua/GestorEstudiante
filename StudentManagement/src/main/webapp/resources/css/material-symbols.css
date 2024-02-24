@@ -11,16 +11,79 @@
     direction: ltr;
 }
 
-.delete-file.material-icons::before{
+.delete-file.material-icons::before {
     content: 'scan_delete';
 }
 
-.filter-tune.material-icons::before{
+.filter-tune.material-icons::before {
     content: 'tune';
 }
 
-.ui-dataview .ui-dataview-header{
+.refresh.material-icons::before {
+    content: 'refresh';
+}
+
+.rule-settings.material-icons::before {
+    content: 'rule_settings';
+}
+
+.dash-remove.material-icons::before {
+    content: 'remove';
+}
+
+.ellipsis.material-icons::before {
+    content: 'more_vert';
+}
+
+.note.material-icons::before {
+    content: 'note_stack';
+}
+
+.ui-dataview .ui-dataview-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-width: 1px;
+    border-radius: 4px;
+}
+
+.overlay-panel {
+    width: 265px;
+    height: 288px;
+}
+
+.expanded-panel {
+    width: 265px;
+    height: 365px;
+    transition: height 0.5s ease-in-out;
+}
+
+.expanded-footer {
+    margin-top: 106px;
+    transition: margin-top 0.5s ease-in-out;
+}
+
+.shrunken-footer {
+    margin-top: 0;
+    transition: margin-top 0.7s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+}
+
+#notesForm\:dVnotes\:rangeDate_input {
+    width: 180px;
+    margin-top: 15px;
+}
+
+#notesDialogs\:j_idt94_content .ui-dialog-content {
+    max-width: 100%;
+    min-width: calc(100% - 3em);
+}
+
+.oval-button {
+    border-bottom-left-radius: 30px;
+}
+
+.multselection-container {
+    position: relative;
+    top: 0;
+    right: 0;
 }
