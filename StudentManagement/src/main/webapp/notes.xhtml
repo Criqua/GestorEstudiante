@@ -16,57 +16,340 @@
     <!-- Recursos para utilización de fuentes de texto personalizadas -->
     <link href="https://db.onlinewebfonts.com/c/9d23cda2fd2a195a8467e0967debd4d3?family=Cera+Round+Pro+Bold" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="resources/css/material-symbols.css"/>
+    <!-- <script type="text/javascript" src="custom.js"> </script> -->
 </h:head>
 
 <h:body>
     <div class="card">
         <h:form id="notesForm">
-            <p:growl id="messages"/>
-
+            <p:growl id="messages" showDetail="true"/>
             <ui:include src="navbar.xhtml"/>
 
-            <div style="margin-bottom: 20px"> </div>
+            <div style="margin-bottom: 8px"> </div>
 
             <p:toolbar>
                 <p:toolbarGroup>
-                    <p:commandButton value="Nueva nota" icon="pi pi-plus" styleClass="ui-button-success" style="margin-right: .5rem"/>
-                    <p:commandButton value="Eliminar" icon="delete-file material-icons" styleClass="ui-button-danger"/>
+                    <p:commandButton value="Nueva nota" icon="pi pi-plus" styleClass="ui-button-success" style="margin-right: .5rem"
+                                      action="#{noteBean.openNew}" update=":notesDialogs:nw-nt-content"  oncomplete="PF('newNoteDialog').show()">
+                        <p:resetInput target=":notesDialogs:nw-nt-content" />
+                    </p:commandButton>
+                    <p:commandButton id="delete-multiple-notes" value="#{noteBean.deleteBtnMessage}" icon="delete-file material-icons"
+                                     actionListener="#{noteBean.deleteSelectedNotes}" styleClass="ui-button-danger"
+                                     disabled="#{!noteBean.hasSelectedNotes()}" update="@this">
+                        <p:confirm header="Eliminar notas" icon="fa-solid fa-triangle-exclamation" >
+                            <f:facet name="message">
+                                <h:outputText value="Las nota seleccionadas se moverán a la Papelera de Reciclaje y se eliminarán definitivamente después 30 días"/>
+                            </f:facet>
+                        </p:confirm>
+                    </p:commandButton>
                 </p:toolbarGroup>
                 <p:toolbarGroup align="right">
                     <p:commandButton value="Papelera de reciclaje" icon="fa-regular fa-trash-can" styleClass="ui-button-help"/>
                 </p:toolbarGroup>
             </p:toolbar>
             <p:panel styleClass="panel-depth" style="margin-top: 5px; margin-bottom: 5px">
-                <div class="card product card crud-demo">
-                    <p:dataView id="dVnotes" var="notes" widgetVar="dvNotes" value="#{noteBean.noteLists}" rows="12" paginator="true"
+                <div class="card product card crud-demo pro">
+                    <p:dataView id="dVnotes" var="note" widgetVar="dvNotes" value="#{noteBean.filteredNotes}" rows="12" paginator="true"
                                 paginatorPosition="top"
                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                 currentPageReportTemplate="( {currentPage} de {totalPages} )"
-                                gridIcon="pi pi-th-large" listIcon="pi pi-list" flex="true">
+                                gridIcon="pi pi-th-large" listIcon="pi pi-list" flex="true" layout="grid" >
 
                         <f:facet name="header">
                             <span style="font-weight: bold; margin-right: auto;">NOTAS</span>
-                            <div class="filter-container ui-input-icon-left" style="margin-right: 8px">
+                            <div class="filter-container ui-input-icon-left" style="margin-right: 5px">
                                 <i class="pi pi-search"> </i>
                                 <p:inputText id="globalFilter" onkeyup="PF('dvNotes').filter()" placeholder="Buscar" />
                             </div>
-                            <p:commandButton id="filterResults" icon="filter-tune material-icons" styleClass="ui-button-outlined ui-button-secondary"
+                            <p:commandButton id="filterResults" icon="filter-tune material-icons" type="button" styleClass="ui-button-outlined ui-button-secondary"
                                              style="margin-right: 10px; border-radius: 4px; background-color: white; border: 1px solid #ced4da"/>
+
+                            <p:overlayPanel id="filterPanel" for="filterResults" style="text-align: left;"
+                                            styleClass="overlay-panel" widgetVar="overlayPanelVar" dismissable="true">
+                                <div class="p-grid">
+                                    <!-- Filtros por tipo de nota -->
+                                    <div class="p-col-12 md:col-12">
+                                        <p:outputLabel for="@next" value="Tipo de nota"/>
+                                    </div>
+                                    <div class="p-col-12 md:col-12" style="margin-top: -5px">
+                                        <p:selectOneMenu id="typeOption" value="#{noteBean.typeFilter}" style="width: 100%">
+                                            <f:selectItem itemLabel="Todos" itemValue="all"/>
+                                            <f:selectItem itemLabel="Cursos" itemValue="courses"/>
+                                            <f:selectItem itemLabel="Otros" itemValue="other"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <!-- Filtros por tiempo -->
+                                    <div class="p-col-12 md:col-12">
+                                        <p:outputLabel for="@next" value="Por tiempo"/>
+                                    </div>
+                                    <div class="p-col-12 md:col-12" style="margin-top: -5px">
+                                        <p:selectOneMenu id="timeOption" value="#{noteBean.timeFilter}" style="width: 100%">
+                                            <f:selectItem itemLabel="Última modificación" itemValue="lastModified"/>
+                                            <f:selectItem itemLabel="Rango de fecha" itemValue="range_ofDate"/>
+                                            <f:selectItem itemLabel="Abiertos recientemente" itemValue="recentlyOpened"/>
+                                            <p:ajax listener="#{noteBean.onTimeOptionChange}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+
+                                <div id="datePickersContainer" class="p-grid"
+                                     style="position: absolute; display: none; margin-bottom: 9px; margin-left: 8px;">
+                                    <div style="margin-top: 10px">
+                                        <p:outputLabel for="rangeDate" value="Rango asignado"/>
+                                    </div>
+                                    <div>
+                                        <p:datePicker id="rangeDate" value="#{noteBean.dateRange}"
+                                                      locale="es" showIcon="true" style="margin-top: -5px;" selectionMode="range"/>
+                                        <p:watermark for="rangeDate" value="__/__/____ - __/__/____" id="watermark"/>
+                                    </div>
+                                </div>
+
+                                <div id="opFooter" class="p-grid">
+                                    <p:divider/>
+
+                                    <div>
+                                        <p:commandButton id="refreshFilters"  icon="refresh material-icons" styleClass="rounded-button ui-button-flat"
+                                                         action="#{noteBean.restartFilters}" update="typeOption timeOption rangeDate"/>
+                                        <p:commandButton value="Aplicar filtros" style="float: right; text-align: center;" action="#{noteBean.verifyDateRange}" update=":notesForm:messages"/>
+
+                                        <p:tooltip for="refreshFilters" value="Restaurar filtros" position="bottom"/>
+                                    </div>
+                                </div>
+                            </p:overlayPanel>
+
                             <p:tooltip for="filterResults" value="Filtros de resultado" position="bottom"/>
                         </f:facet>
 
                         <p:dataViewGridItem id="gridItem">
-                            <p:tooltip for="gridItem" value="Vista de cuardrícula" position="bottom"/>
+                            <div class="note-grid-item border-1">
+                                <div class="note-grid-item-content">
+                                    <div class="note-preview border-solid border-500
+                                    hover:border-cyan-700" style="height: 180px; width: 208px;">
+                                        #{note.body}
+                                    </div>
+                                    <div class="note-title font-bold text-black-alpha-90">#{note.title}</div>
+                                </div>
+                                <div>
+                                    <i class="fa-solid fa-tags product-category-icon"/>
+                                    <!-- <span class="note-category">#{noteBean.getNoteTag(note)}</span> -->
+                                </div>
+                                <div class="multselection-container">
+                                    <p:selectBooleanButton value="#{noteBean.selected}" onIcon="dash-remove material-icons" styleClass="oval-button">
+                                        <p:ajax event="valueChange" listener="#{noteBean.toggleNoteSelection(note)}" update=":notesForm:delete-multiple-notes"/>
+                                    </p:selectBooleanButton>
+                                </div>
+                            </div>
+                            <div class="note-grid-item-bottom">
+                                <p:divider/>
+                                <h:outputText value="#{noteBean.getDateType(note)}"/>
+                                <p:commandButton type="button" icon="ellipsis material-icons" styleClass="rounded-button ui-button-info" />
+                            </div>
                         </p:dataViewGridItem>
 
                         <p:dataViewListItem id="listItem">
-                            <p:tooltip for="listItem" value="Vista de lista" position="bottom"/>
+                            <div class="note-list-item">
+                                <div class="note-preview border-solid border-500
+                                    hover:border-cyan-700" style="width: 150px;">
+                                    #{note.body}
+                                </div>
+                                <div class="note-list-details">
+                                    <div class="note-title font-bold text-black-alpha-90">#{note.title}</div>
+                                    <i class="fa-solid fa-tags product-category-icon"/>
+                                    <span class="note-category">#{noteBean.getNoteTag(note)}</span>
+                                </div>
+                                <div class="note-list-right-section">
+                                    <h:outputText value="#{noteBean.getDateType(note)}"/>
+                                    <p:commandButton type="button" icon="ellipsis material-icons" styleClass="rounded-button ui-button-info" />
+                                </div>
+                            </div>
                         </p:dataViewListItem>
 
+                        <p:tooltip for="gridItem" value="Vista de cuardrícula" position="bottom"/>
+                        <p:tooltip for="listItem" value="Vista de lista" position="bottom"/>
                     </p:dataView>
                 </div>
             </p:panel>
+        <script>
+            /*
+                Función que permite aplicar una clase de estilos para la expansión del
+                overlayPanel de filtros
+            */
+            function expandOverlayPanel() {
+                var overlayPanel = PF('overlayPanelVar');
+                var panel = overlayPanel.jq;
+
+                if (panel.hasClass('overlay-panel')){
+                    panel.removeClass('overlay-panel').addClass('expanded-panel')
+                        .css('transition', 'height 0.5s ease-in-out');
+                    $('#opFooter').removeClass('shrunken-footer').addClass('expanded-footer');
+
+                    // Agregar un retraso de medio segundo antes de mostrar el div datePickersContainer
+                    setTimeout(function() {
+                        $('#datePickersContainer').css('display', 'block');
+                    }, 500); // 500 milisegundos = medio segundo
+                }
+            }
+
+            /*
+                Función que permite restaurar el estilo original del overlayPanel de filtros
+            */
+            function restoreOverlayPanel() {
+                var overlayPanel = PF('overlayPanelVar');
+                var panel = overlayPanel.jq;
+
+                if (panel.hasClass('expanded-panel')) {
+                    panel.removeClass('expanded-panel').addClass('overlay-panel');
+                    $('#opFooter').removeClass('expanded-footer').addClass('shrunken-footer');
+
+                    // Ocultar el div datePickersContainer
+                    $('#datePickersContainer').css('display', 'none');
+                }
+            }
+        </script>
+        </h:form>
+
+        <h:form id="notesDialogs" style="min-width: 400px">
+            <p:dialog widgetVar="newNoteDialog" header="Detalles de la nota"
+                      showEffect="fade" hideEffect="drop" modal="true" responsive="true" draggable="false">
+                <p:outputLabel class="ui-fluid" id="nw-nt-content">
+                    <p:outputLabel rendered="#{not empty noteBean.selectedNote}">
+                        <div class="field">
+                            <p:outputLabel for="title">Título</p:outputLabel>
+                            <p:inputText id="title" value="#{noteBean.selectedNote.title}" required="true"/>
+                        </div>
+                        <div class="field">
+                            <p:outputLabel for="noteType">Tipo de nota</p:outputLabel>
+                            <p:selectOneMenu id="noteType" style="width: 100%" value="#{noteBean.selectedNote.degreeCourses}"
+                                             onfocus="adjustDropdownPanel()"
+                                             filter="true" filterMatchMode="contains" filterNormalize="true">
+                                <f:selectItem itemLabel="No aplica" itemValue="N/A"/>
+                                <f:selectItems value="#{noteBean.allPeriodCourses}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </p:outputLabel>
+                </p:outputLabel>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Crear" icon="pi pi-check" action="#{noteBean.createNote}"
+                                     update="nw-nt-content" process="nw-nt-content @this" />
+                    <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('newNoteDialog').hide()"
+                                     class="ui-button-secondary" type="button" />
+                </f:facet>
+            </p:dialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="MOVER A PAPELERA" type="button" styleClass="ui-confirmdialog-yes ui-button-help" icon="pi pi-check" />
+                <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no ui-button-outlined"
+                                 icon="pi pi-times" />
+            </p:confirmDialog>
+
+            <p:confirmDialog widgetVar="deleteNoteDialog" header="Eliminar nota"
+                      showEffect="fade" hideEffect="drop" width="350" severity="alert">
+                <f:facet name="message">
+                    <h:outputText value="La nota seleccionada se moverá a la Papelera de Reciclaje y se eliminará definitivamente después 30 días"/>
+                </f:facet>
+                <p:divider/>
+                <p:commandButton value="Cancelar" icon="pi pi-times" type="button" onclick="PF('deleteNoteDialog').hide()"
+                                 style="color: #fff" styleClass="ui-button-outlined"/>
+                <p:commandButton value="MOVER A PAPELERA" process="@this"
+                                 style="font-weight: 500" styleClass="ui-button-help"/>
+            </p:confirmDialog>
+        <script>
+            /*
+                Función que cambia el largo del menú desplegable tomando como valor el largo
+                de su componente de tipo "p:selectOneMenu"
+             */
+            function adjustDropdownPanel(){
+                var noteType = document.getElementById('notesDialogs:noteType');
+                var noteTypePanel = document.getElementById('notesDialogs:noteType_panel');
+                var newWidth = noteType.clientWidth;
+
+                noteTypePanel.style.width = newWidth + 'px';
+            }
+        </script>
         </h:form>
     </div>
 </h:body>
 </html>
+
+<!--
+    margin-left: 2px;
+    position: absolute;
+    margin-top: -2px;
+<div class="checkbox-wrapper">
+  <label class="switch">
+    <input type="checkbox">
+    <span class="slider"></span>
+  </label>
+</div>
+
+<style>
+  .checkbox-wrapper input[type="checkbox"] {
+    visibility: hidden;
+    display: none;
+  }
+
+  .checkbox-wrapper *,
+  .checkbox-wrapper ::after,
+  .checkbox-wrapper ::before {
+    box-sizing: border-box;
+  }
+
+  /* The switch - the box around the slider */
+  .checkbox-wrapper .switch {
+    -width-of-switch: 3.5em;
+    -height-of-switch: 2em;
+    /* size of sliding icon - sun and moon */
+    -size-of-icon: 1.4em;
+    /* it is like a inline-padding of switch */
+    -slider-offset: 0.3em;
+    position: relative;
+    width: var(-width-of-switch);
+    height: var(-height-of-switch);
+    display: inline-block;
+  }
+
+  /* The slider */
+  .checkbox-wrapper .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f4f4f5;
+    transition: .4s;
+    border-radius: 30px;
+  }
+
+  .checkbox-wrapper .slider:before {
+    position: absolute;
+    content: "";
+    height: var(-size-of-icon,1.4em);
+    width: var(-size-of-icon,1.4em);
+    border-radius: 20px;
+    left: var(-slider-offset,0.3em);
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(40deg,#ff0080,#ff8c00 70%);
+    ;
+   transition: .4s;
+  }
+
+  .checkbox-wrapper input:checked + .slider {
+    background-color: #303136;
+  }
+
+  .checkbox-wrapper input:checked + .slider:before {
+    left: calc(100% - (var(-size-of-icon,1.4em) + var(-slider-offset,0.3em)));
+    background: #303136;
+    /* change the value of second inset in box-shadow to change the angle and direction of the moon  */
+    box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -4px 0 0 #a3dafb;
+  }
+</style>
+
+    Cuerpo de documento
+    Título
+    Fecha * hora
+    Tags
+-->

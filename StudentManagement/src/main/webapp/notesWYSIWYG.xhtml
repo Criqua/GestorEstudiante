@@ -13,20 +13,37 @@
         // Se inicializa TinyMCE en un componente de texto
         document.addEventListener("DOMContentLoaded", function(){
             tinymce.init({
-                selector: "#myTextarea",
-                plugins:'advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste autocorrect code help wordcount',
+                selector: "textArea",
+                plugins:'advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount',
                 toolbar: 'undo redo | blocks fontfamily fontsize | formatselect | ' +
                     'bold italic backcolor | alignleft aligncenter ' +
                     'alignright alignjustify | bullist numlist outdent indent | ' +
                     'image | removeformat | help',
+                language:'es',
+            });
+
+            window.addEventListener('beforeunload', function (e){
+                saveContent();
             });
         });
     </script>
 </h:head>
 
 <h:body>
-    <!-- Componente de entrada de texto de PrimeFaces -->
-    <p:inputTextarea id="myTextarea" rows="28" cols="50" />
+    <h:form>
+        <!-- Componente de entrada de texto de PrimeFaces -->
+        <p:inputTextarea id="textArea" value="#{noteBean.selectedNote.body}" rows="28" cols="50" />
 
+        <p:remoteCommand name="saveContentToBean" action="#{noteBean.updateNote}" update="@this"/>
+    </h:form>
 </h:body>
+
+<script>
+    function saveContent() {
+        // Obtener el contenido actual del editor TinyMCE
+        var content = tinymce.get('textArea').getContent();
+
+        saveContentToBean([{name:'documentBody', value: content}]);
+    }
+</script>
 </html>
