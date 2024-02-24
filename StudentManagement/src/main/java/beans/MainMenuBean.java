@@ -2,11 +2,12 @@ package beans;
 
 import entities.Student;
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
+
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import lombok.Data;
+
 import lombok.Getter;
 import lombok.Setter;
 import service.IDAO;
@@ -14,13 +15,13 @@ import service.IDAO;
 import java.io.Serializable;
 
 @Named
-@ApplicationScoped
+@RequestScoped
 @Getter
 @Setter
 public class MainMenuBean implements Serializable {
-    @Inject
+    /*@Inject
     @Named("implDAO")
-    private IDAO dao;
+    private IDAO dao;*/
 
     private String name;
 

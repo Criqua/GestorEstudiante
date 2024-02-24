@@ -54,4 +54,3 @@ public class AgendaBean implements Serializable {
         return "/scheduleChart.xhtml?faces-redirect=true";
     }
 }
-

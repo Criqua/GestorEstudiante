@@ -32,7 +32,7 @@ public class LoginBean implements Serializable {
         if (student != null && student.getPassword().equals(password)) {
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("user", student);
 
-            return "mainMenu.xhtml";
+            return "/mainMenu.xhtml?faces-redirect=true";
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al iniciar sesión", "CIF o contraseña incorrectos. Favor vuelva a intentarlo."));
