@@ -7,7 +7,7 @@ import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 @Named("implDAO")
-public class ImplDAO implements IDAO{
+public class ImplDAO implements IDAO {
     @Override
     public <T> List<T> getAll(String namedQuery, Class<T> clazz) {
         EntityManager em = EntityManagerAdmin.getInstance();
@@ -27,13 +27,21 @@ public class ImplDAO implements IDAO{
     }
 
     @Override
-    public <T> List<T> get(String namedQuery, Class<T> clazz, Object... param) {
-        EntityManager em = EntityManagerAdmin.getInstance();
-        try {
+    public <T> List<T> get(String namedQuery, Class<T> clazz, Object... params) {
+        try(EntityManager em = EntityManagerAdmin.getInstance()) {
             TypedQuery<T> query = em.createNamedQuery(namedQuery, clazz);
-            // Asegúrate de que la consulta nombrada tenga un parámetro llamado "cif"
-            if (param.length > 0) {
-                query.setParameter("cif", param[0]);
+            // Si es necesario, se asignan parámetros a la consulta
+            if (params != null && params.length > 0) {
+                // Se asegura de que haya un número par de argumentos (nombre, valor)
+                if (params.length % 2 != 0) {
+                    throw new IllegalArgumentException("La cantidad de parámetros debe ser par.");
+                }
+                // Se establecen los parámetros en la consulta, de dos en dos tomando tanto el nombre como el valor del parámetro
+                for (int i = 0; i < params.length; i += 2) {
+                    String paramName = (String) params[i];
+                    Object paramValue = params[i + 1];
+                    query.setParameter(paramName, paramValue);
+                }
             }
             return query.getResultList();
         }
@@ -41,9 +49,6 @@ public class ImplDAO implements IDAO{
         {
             e.printStackTrace();
             return null;
-        }
-        finally {
-            em.close();
         }
     }
 

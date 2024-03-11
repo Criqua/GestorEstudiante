@@ -1,6 +1,7 @@
 package service;
 
 import entities.Agenda;
+import entities.Test;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * Se utilizan genéricos para operar con diferentes tipos de entidades
  */
 public interface IDAO {
-    // Recuperation de todos los registros de una entidad en la BD
+    // Recuperación de todos los registros de una entidad en la BD
     <T> List<T> getAll(String namedQuery, Class<T> clazz);
 
     // Inserción de un nuevo registro en la BD con la entidad como parámetro
@@ -25,8 +26,7 @@ public interface IDAO {
     <T, ID> T findById(Class<T> clazz, ID id);
 
     // Ejecución de una consulta nombrada con parámetros cualquiera y devuelve una lista de resultados.
-    // *
-    <T> List<T> get(String namedQuery, Class<T> clazz, Object... param);
+    <T> List<T> get(String namedQuery, Class<T> clazz, Object... params);
 
     <T> T save(T entity);
 }
