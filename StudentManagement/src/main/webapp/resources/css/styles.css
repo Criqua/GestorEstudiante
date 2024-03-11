@@ -85,7 +85,7 @@ body {
     background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
     position: absolute;
     width: 6400px;
-    top: -198px;
+    top: -168px; /* +30px */
     left: 0;
     height: 198px;
     transform: translate(0, 0);
@@ -93,7 +93,7 @@ body {
 }
 
 .wave:nth-of-type(2) {
-    top: -168px;
+    top: -138px;  /* +20px */
     animation: swell 4s ease infinite;
     opacity: 1;
 }
@@ -114,4 +114,9 @@ body {
 
 #growl {
     text-align: right;
+}
+
+div[id="forgottenpsw"] {
+    margin-top: 12px;
+    margin-left: -55px;
 }

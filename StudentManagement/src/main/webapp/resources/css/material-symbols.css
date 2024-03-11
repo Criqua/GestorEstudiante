@@ -79,11 +79,61 @@
 }
 
 .oval-button {
-    border-bottom-left-radius: 30px;
+    border-bottom-left-radius: 30px !important;
 }
 
 .multselection-container {
-    position: relative;
+    position: absolute;
     top: 0;
     right: 0;
+}
+
+.note-grid-item {
+    border: 1px solid var(--surface-d);
+    background: var(--surface-e);
+    padding: 2rem;
+    box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+    border-radius: 4px;
+    margin-bottom: 2rem;
+}
+
+.speeddial-consistent-note-size .ui-speeddial-button.ui-button.ui-button-icon-only{
+    width: 40px;
+    height: 40px;
+}
+
+.speeddial-consistent-note-size .ui-speeddial {
+    position: relative;
+}
+
+.speeddial-list-items-size .ui-speeddial-action {
+    width: 35px;
+    height: 35px;
+    text-decoration: none;
+}
+
+.speeddial-list-items-size .ui-speeddial-list {
+    bottom: 0;
+    position: absolute;
+    --item-diff-x: -35.5px !important;
+    --item-diff-y: 2.5px !important;
+}
+
+.speeddial-icon-size .ui-speeddial .ui-speeddial-action .pi {
+    font-size: 12px;
+}
+
+.ui-speeddial-quarter-circle.ui-speeddial-direction-down-right {
+    left: 0;
+    top: 0;
+}
+
+.hoverDiv:hover {
+    border-color: #2196f3;
+    cursor: pointer;
+}
+
+:hover:is(.speeddial-consistent-note-size.ui-speeddial-button.ui-button.ui-button-icon-only) {
+    background: #007abc;
+    border-color: #007abc;
 }
