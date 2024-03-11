@@ -23,6 +23,7 @@ import java.util.List;
 })
 public class Student {
     @Id
+    @Column(name = "CIF")
     private String CIF;
 
     @Column(name = "Nombre")
@@ -56,6 +57,9 @@ public class Student {
 
     @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
     private List<Agenda> agendaList;
+
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
+    private List<Test> testList;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

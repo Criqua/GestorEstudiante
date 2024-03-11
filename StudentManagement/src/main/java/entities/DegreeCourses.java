@@ -11,6 +11,12 @@ import java.util.List;
 @Table(name = "Cursos_Universidad")
 @Getter
 @Setter
+@NamedQueries({
+        @NamedQuery(
+                name="DegreeCourses.FindById",
+                query="SELECT d FROM DegreeCourses d WHERE d.id =:id"
+        )
+})
 public class DegreeCourses {
     @Id
     @Column(name = "ID_Curso")
@@ -24,4 +30,7 @@ public class DegreeCourses {
 
     @OneToMany(mappedBy = "degreeCourses", fetch = FetchType.EAGER)
     private List<CourseDetails> courseDetailsList;
+
+    @OneToMany(mappedBy = "degreeCourses", fetch = FetchType.EAGER)
+    private List<Notes> notesList;
 }

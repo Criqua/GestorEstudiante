@@ -24,6 +24,12 @@ public class CourseDetails {
     @JoinColumn(name = "ID_Docente", referencedColumnName = "ID_Docente")
     private Professor professor;
 
+    @Column(name = "Grupo")
+    private String group;
+
+    @Column(name = "Aula")
+    private String classroom;
+
     @OneToMany(mappedBy = "courseDetails", fetch = FetchType.EAGER)
     private List<SemesterSchedule> semesterScheduleList;
 }
