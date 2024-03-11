@@ -4,25 +4,31 @@
       xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-    <title>Ejemplo usando TinyMCE con Primefaces</title>
+    <title>
+         | ClassMate
+    </title>
 
     <!-- Inclusión de TinyMCE desde la CDN (red de distribución de contenido) -->
     <script src="https://cdn.tiny.cloud/1/nrftj4uf24rcoyt2eawxvm37sk9dd0id9p4yn1r0y7skufrb/tinymce/6/tinymce.min.js" referrerpolicy="origin"> </script>
+    <!-- Enlace a head para usar Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link href="https://db.onlinewebfonts.com/c/9d23cda2fd2a195a8467e0967debd4d3?family=Cera+Round+Pro+Bold" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="resources/css/mMenu.css"/>
 
     <script>
         // Se inicializa TinyMCE en un componente de texto
         document.addEventListener("DOMContentLoaded", function(){
             tinymce.init({
                 selector: "textArea",
-                plugins:'advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount',
+                plugins:'advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount preview',
                 toolbar: 'undo redo | blocks fontfamily fontsize | formatselect | ' +
                     'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                    'alignright alignjustify | bullist numlist outdent indent | preview |' +
                     'image | removeformat | help',
                 language:'es',
             });
 
-            window.addEventListener('beforeunload', function (e){
+            window.addEventListener('visibilitychange', function (e){
                 saveContent();
             });
         });
@@ -31,19 +37,40 @@
 
 <h:body>
     <h:form>
-        <!-- Componente de entrada de texto de PrimeFaces -->
-        <p:inputTextarea id="textArea" value="#{noteBean.selectedNote.body}" rows="28" cols="50" />
+        <div class="card">
+            <p:panel id="txtAreaHeader"
+                 style="width: 100%; height: 60px; text-align: left; margin-bottom: 5px; font-family: 'Cera Round Pro Bold', sans-serif;"
+                 class="header-depth flex">
+                <i class="fas fa-chalkboard-user icon" style="font-size: 20px"/>
 
-        <p:remoteCommand name="saveContentToBean" action="#{noteBean.updateNote}" update="@this"/>
+                <!-- <p:divider layout="vertical"/> -->
+
+                <p:outputLabel id="documentTitle" value="#{documentBean.selectedNote.title}"/>
+            </p:panel>
+            <!-- Componente de entrada de texto de PrimeFaces -->
+            <p:inputTextarea id="textArea" value="#{documentBean.selectedNote.body}" rows="28" cols="50" />
+
+            <p:remoteCommand name="saveContentToBean" action="#{documentBean.updateNote}" update="@this"/>
+        </div>
     </h:form>
 </h:body>
 
 <script>
     function saveContent() {
-        // Obtener el contenido actual del editor TinyMCE
-        var content = tinymce.get('textArea').getContent();
+        // Se obtiene el contenido actual en el area de texto
+        var content = tinymce.activeEditor.getContent('textArea');
 
         saveContentToBean([{name:'documentBody', value: content}]);
+    }
+
+    function previewContent() {
+        var content = tinymce.get('textArea').getContent();
+
+        // Se establece un contenido de vista previa para usar en el menú de notas
+        var previewContainer = document.getElementById('previewContainer');
+        if (previewContainer) {
+            previewContainer.innerHTML = content;
+        }
     }
 </script>
 </html>

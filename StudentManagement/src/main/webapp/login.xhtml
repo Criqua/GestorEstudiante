@@ -38,13 +38,19 @@
                 <div style="position: relative;">
                     <div class="ui-inputgroup">
                         <span class="ui-inputgroup-addon"><i class="pi pi-user"> </i></span>
-                        <p:inputText id="cif" value="#{loginBean.cif}" required="true" placeholder="CIF" style="width: 200px"/>
+                        <p:inputText id="cif" value="#{loginBean.cif}" required="true"
+                                     placeholder="CIF" style="width: 200px" autocomplete="username"/>
                     </div>
 
                     <div class="ui-inputgroup" style="margin-top: 30px">
                         <span class="ui-inputgroup-addon"><i class="pi pi-lock"> </i></span>
                         <p:password id="toggle" value="#{loginBean.password}" toggleMask="true" redisplay="true" required="true"
-                                    placeholder="Contraseña" styleClass="input-password-box"/>
+                                    placeholder="Contraseña" styleClass="input-password-box" autocomplete="current-password"/>
+                    </div>
+
+                    <div id="forgottenpsw">
+                        <p:commandLink value="¿Olvidaste tu contraseña?"
+                                         action="#{loginBean.forgottenPassword}" styleClass="ui-button-flat"/>
                     </div>
                 </div>
             </div>
