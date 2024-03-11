@@ -403,7 +403,7 @@ public class NoteBean implements Serializable {
             return "/notesWYSIWYG.xhtml?faces-redirect=true&includeViewParams=true";
         }
 
-        System.out.println("No funcionó");
+        System.out.println("Didn't work :(");
         return null;
     }
 
@@ -444,7 +444,6 @@ public class NoteBean implements Serializable {
 
         /*
         // Impresión de lista de cursos (por cuestiones de prueba)
-        System.out.println("Contenido de allPeriodCourses:");
         for (SelectItem item : allPeriodCourses) {
             if (item instanceof SelectItemGroup) {
                 System.out.println(((SelectItemGroup) item).getLabel());
