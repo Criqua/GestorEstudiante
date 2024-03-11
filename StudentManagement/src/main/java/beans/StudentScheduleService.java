@@ -10,11 +10,13 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Named
 @ApplicationScoped
 public class StudentScheduleService {
     protected List<SemesterSchedule> semesterScheduleList;
+    protected Map<String, DegreeCourses> subjectsAsMap;
 
     @PostConstruct
     public void init(){
@@ -23,20 +25,27 @@ public class StudentScheduleService {
         semesterScheduleList = student.getSemesterScheduleList();
     }
 
-    // Método que retorna todas las materias inscritas actualmente y previamente por el estudiante
     public List<DegreeCourses> getStudentsSubjects() {
         List<DegreeCourses> subjects = new ArrayList<>();
 
+        // Se agrega un valor alternativo a las asignaturas
+        subjects.add(new DegreeCourses() {{
+            setId("N/A"); setId_program("N/A"); setCourseName("No aplica");
+        }});
+
+        // Verificar si la lista de semesterScheduleList está inicializada
         if (semesterScheduleList != null) {
+            // Iterar sobre la lista de SemesterSchedule
             for (SemesterSchedule schedule : semesterScheduleList) {
+                // Obtener el CourseDetails asociado al SemesterSchedule
                 CourseDetails courseDetails = schedule.getCourseDetails();
                 if (courseDetails != null) {
-                    // Se obtiene el curso asociado a los detalles de este
+                    // Obtener el DegreeCourses asociado al CourseDetails
                     DegreeCourses degreeCourses = courseDetails.getDegreeCourses();
                     if (degreeCourses != null) {
-                        // Se verifica si ya se ha agregado el curso a la lista
+                        // Verificar si ya se ha agregado este DegreeCourses a la lista
                         if (!subjects.contains(degreeCourses)) {
-                            // Se agrega el curso a la lista de asignaturas si no está presente
+                            // Agregar el DegreeCourses a la lista de asignaturas si no está presente
                             subjects.add(degreeCourses);
                         }
                     }
@@ -47,7 +56,14 @@ public class StudentScheduleService {
         return subjects;
     }
 
-    // Método que asocia cada período único con una lista de cursos correspondientes, basándose en la lista de horarios de cada semestre
+    public Map<String, DegreeCourses> getSubjectsAsMap() {
+        if (subjectsAsMap == null) {
+            subjectsAsMap = getStudentsSubjects().stream().
+                    collect(Collectors.toMap(DegreeCourses::getId, course -> course));
+        }
+        return subjectsAsMap;
+    }
+
     public Map<String, List<DegreeCourses>> associatePeriodsWCourses(List<String> uniquePeriods){
         Map<String, List<DegreeCourses>> periodCoursesMap = new HashMap<>();
 
@@ -79,7 +95,6 @@ public class StudentScheduleService {
         return  periodCoursesMap;
     }
 
-    // Método que retorna una lista de períodos únicos cursados por el estudiante
     public List<String> getUniquePeriods(){
         Set<String> uniquePeriods = new HashSet<>();
 
@@ -96,13 +111,13 @@ public class StudentScheduleService {
     private String extractPeriod(String id) {
         if (id != null && id.startsWith("PER")) {
             // El formato de la cadena de ID es "PER"YYYY"-"N° SEMESTRE"-XXXX"
-            // Se extrae el periodo que sigue al prefijo "PER"
+            // Extraer el periodo que sigue al prefijo "PER"
             int startIndex = "PER".length();
-            int endIndex = id.indexOf("-", startIndex);
+            int endIndex = id.indexOf("-", startIndex); // Buscar el guion que separa el periodo del semestre
             if (endIndex != -1) {
-                int semestreIndex = id.indexOf("-", endIndex + 1); // Se busca el guion que separa el periodo del semestre
+                int semestreIndex = id.indexOf("-", endIndex + 1); // Buscar el guion que separa el periodo del semestre
                 if (semestreIndex != -1) {
-                    return id.substring(startIndex, semestreIndex); // Se retorna la subcadena resultante ("YYYY"-"N° SEMESTRE")
+                    return id.substring(startIndex, semestreIndex);
                 }
             }
         }
