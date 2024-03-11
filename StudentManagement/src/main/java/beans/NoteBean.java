@@ -3,20 +3,28 @@ package beans;
 import entities.DegreeCourses;
 import entities.Notes;
 import entities.Student;
+import entities.Test;
 import jakarta.annotation.PostConstruct;
+import jakarta.ejb.Stateless;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 import jakarta.faces.model.SelectItem;
 import jakarta.faces.model.SelectItemGroup;
 
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import jakarta.inject.Qualifier;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.PrimeFaces;
+
 import service.IDAO;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import java.time.LocalDate;
@@ -33,12 +41,15 @@ import java.util.stream.Collectors;
 public class NoteBean implements Serializable {
     @Inject
     @Named("implDAO")
-    transient private IDAO dao;
+    private transient IDAO dao;
 
     @Inject
     private StudentScheduleService studentScheduleService;
 
+    private Student student;
+
     private List<String> noteLists = new ArrayList<>(List.of("Nota 1", "Nota 2", "Nota 3"));
+
     private List<Notes> notesList;
     private List<Notes> filteredNotes;
     private List<Notes> selectedNotes;
@@ -46,12 +57,13 @@ public class NoteBean implements Serializable {
     private List<String> checklistLists = new ArrayList<>(List.of("Checklist 1", "Checklist 2", "Checklist 3"));
 
     private Notes selectedNote;
+
     private String body;
-
     private String layout = "grid";
-
     private String typeFilter;
     private String timeFilter;
+    private String dialogHeader;
+    private String btnLabel;
 
     private DegreeCourses selectedSubject;
 
@@ -65,15 +77,12 @@ public class NoteBean implements Serializable {
     private List<SelectItem> allPeriodCourses;
 
     @PostConstruct
-    public void init(){
-        Student student = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
+    public void init() {
+        this.student = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
 
-        if (student != null){
+        if (student != null) {
             this.notesList = new ArrayList<>();
-            this.notesList = dao.get("Notes.FindByStudentAndStatus", Notes.class,
-                    "cif", student.getCIF(), "status", false);
-            this.filteredNotes = new ArrayList<>();
-            this.filteredNotes.addAll(notesList);
+            this.notesList = dao.get("Notes.FindByStudentAndStatus", Notes.class, "cif", student.getCIF(), "status", false);
             this.typeFilter = "all";
             this.timeFilter = "lastModified";
             this.applyFilters();
@@ -93,7 +102,7 @@ public class NoteBean implements Serializable {
         SelectItemGroup currentPeriodGroup = new SelectItemGroup("Asignaturas en período actual");
         List<SelectItem> currentPeriodItems = new ArrayList<>();
 
-        for (String period : uniquePeriods){
+        for (String period : uniquePeriods) {
             List<SelectItem> subjectItems = new ArrayList<>();
             Set<String> courseIds = new HashSet<>();
 
@@ -103,12 +112,12 @@ public class NoteBean implements Serializable {
 
             List<DegreeCourses> courses = periodsWithCourses.get(period);
 
-            if (courses != null){
+            if (courses != null) {
                 for (DegreeCourses course : courses){
                     String courseId = course.getId();
 
                     if (!courseIds.contains(courseId)) {
-                        subjectItems.add(new SelectItem(courseId, course.getCourseName()));
+                        subjectItems.add(new SelectItem(course.getId(), course.getCourseName()));
                         courseIds.add(courseId);
                     }
                 }
@@ -125,32 +134,31 @@ public class NoteBean implements Serializable {
             }
         }
 
+        // Se agrega un item alterno a los cursos presentados como primer valor de la lista
+        allPeriodCourses.add(0, new SelectItem("N/A", "Otros"));
         // Se agregan los items del periodo actual al grupo del periodo actual, moviendo el grupo al inicio de la lista
         currentPeriodGroup.setSelectItems(currentPeriodItems.toArray(new SelectItem[0]));
-        allPeriodCourses.add(0, currentPeriodGroup);
-
-        // Impresión de lista de cursos (por cuestiones de prueba)
-        /*System.out.println("Contenido de allPeriodCourses:");
-        for (SelectItem item : allPeriodCourses) {
-            if (item instanceof SelectItemGroup) {
-                System.out.println(((SelectItemGroup) item).getLabel());
-                for (SelectItem subItem : ((SelectItemGroup) item).getSelectItems()) {
-                    System.out.println("   " + subItem.getLabel() + ": " + subItem.getValue());
-                }
-            } else {
-                System.out.println(item.getLabel() + ": " + item.getValue());
-            }
-        }*/
+        allPeriodCourses.add(1, currentPeriodGroup);
     }
 
+    /* Método para inicializar una nueva instancia de notas al momento de crear una*/
     public void openNew() {
         this.selectedNote = new Notes();
     }
 
+    public void setDialogLabel() {
+        this.dialogHeader = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("headerLabel");
+        this.btnLabel = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("btnLabel");
+    }
+
+    /**
+     * Método que retorna un mensaje estándar o indicante de la cantidad de notas
+     * seleccionadas a mostrar en un botón de eliminación de notas
+     **/
     public String getDeleteBtnMessage() {
-        if(hasSelectedNotes()){
+        if (hasSelectedNotes()){
             int size = this.selectedNotes.size();
-            return size > 1 ? size + " notas seleccionadas" : "nota seleccionada";
+            return size > 1 ? size + " notas seleccionadas" : "1 nota seleccionada";
         }
 
         return "Eliminar";
@@ -163,23 +171,24 @@ public class NoteBean implements Serializable {
         return this.selectedNotes != null && !this.selectedNotes.isEmpty();
     }
 
+    /* Método que gestiona el cambio de estado de selección (múltiple) de una nota */
     public void toggleNoteSelection(Notes note) {
         if (this.selectedNotes == null) {
             this.selectedNotes = new ArrayList<>();
         }
 
         if (this.selectedNotes.contains(note)) {
-            this.selectedNotes.add(note);
+            this.selectedNotes.remove(note); // Si la nota ya está seleccionada, la eliminamos de la lista
         } else {
-            this.selectedNotes.remove(note);
+            this.selectedNotes.add(note); // Si la nota no está seleccionada, la agregamos a la lista
         }
     }
-
 
     /* Método que filtra los registros de notas en base a
        todas las opciones de filtrado seleccionadas por los componentes de p:selectOneMenu
     */
     public void applyFilters() {
+        this.filteredNotes = new ArrayList<>(this.notesList);
         filterByType();
         filterByTime();
     }
@@ -194,12 +203,12 @@ public class NoteBean implements Serializable {
                     break;
                 case "courses":
                     filteredNotes = filteredNotes.stream()
-                            .filter(note -> !note.getDegreeCourses().getCourseName().equals("N/A"))
+                            .filter(note -> !note.getDegreeCourses().getCourseName().equals("No aplica"))
                             .collect(Collectors.toList());
                     break;
                 case "other":
                     filteredNotes = filteredNotes.stream()
-                            .filter(note -> note.getDegreeCourses().getCourseName().equals("N/A"))
+                            .filter(note -> note.getDegreeCourses().getCourseName().equals("No aplica"))
                             .collect(Collectors.toList());
                     break;
             }
@@ -237,6 +246,7 @@ public class NoteBean implements Serializable {
 
     /* Método que filtra la lista de notas entre un rango de fechas dado */
     private void sortByDateRange() {
+        this.verifyDateRange();
         if (startDateRange != null && endDateRange != null) {
             filteredNotes = filteredNotes.stream()
                     .filter(note -> note.getLastModifiedDate().isAfter(startDateRange.atStartOfDay()) &&
@@ -283,7 +293,7 @@ public class NoteBean implements Serializable {
             if (degreeCourses != null) {
                 String courseName = degreeCourses.getCourseName();
                 if (courseName != null) {
-                    if ("N/A".equals(courseName)) {
+                    if ("No aplica".equals(courseName)) {
                         return "Otros";
                     } else {
                         return courseName;
@@ -294,6 +304,8 @@ public class NoteBean implements Serializable {
         return null;
     }
 
+    /* Método que formatea la fecha y hora en un formato específico de una nota,
+       retornando una cadena que lo representa */
     public String getDateType(Notes note) {
         LocalDateTime lastOpenedDate = note.getLastOpenedDate();
         // Fecha formateada en el formato (dd/mm/yyyy) con mes detallado
@@ -311,27 +323,102 @@ public class NoteBean implements Serializable {
         }
     }
 
-    public String createNote() {
-        LocalDateTime now = LocalDateTime.now();
-        this.selectedNote.setBody(null);
-        this.selectedNote.setCreationDate(now);
-        this.selectedNote.setLastOpenedDate(now);
-        this.selectedNote.setInTrash(false);
+    /**
+     * Método que verifica si hay duplicados en el título de una nota,
+     * generando uno nuevo si es necesario
+    */
+    public String verifyDuplicates(Notes note) {
+        String newTitle = note.getTitle();
+        int counter = 1; // Se inicializa un contador para agregar un sufijo único en caso de duplicados
 
-        dao.save(this.selectedNote);
-
-        return "/notesWYSIWYG.xhtml?faces-redirect=true";
+        if (titleExist(newTitle, note)) {
+            // Mientras el título con el sufijo actual exista, se incrementa el contador hasta generar el título único
+            while (titleExist(newTitle + " (" + counter + ")", note)) {
+                counter++;
+            }
+            newTitle += " (" + counter + ") ";
+        }
+        return newTitle;
     }
 
-    public void updateNote() {
+    /* Método que verifica si un título y categoría de nota
+       coincide en un listado de notas
+    */
+    public boolean titleExist(String title, Notes note) {
+        for (Notes existingNote : this.notesList) {
+            if (existingNote.getTitle().equals(title) &&
+                    existingNote.getDegreeCourses().equals(note.getDegreeCourses())) {
+                return true; // Se devuelve true al haber encontrado una coincidencia de título y curso/categoría
+            }
+        }
+        return false;
+    }
+
+    /* Método que crea una nueva nota, la guarda en la base de datos
+       y redirige a un procesador de texto para su modificación o bien, actualiza sus atributos
+       en caso de editar una nota existente */
+    public String saveNote() {
+        this.selectedSubject = this.selectedNote.getDegreeCourses();
+        if (selectedSubject != null && this.selectedNote.getId() == null) {
+            LocalDateTime now = LocalDateTime.now();
+            String title = verifyDuplicates(this.selectedNote);
+
+            // Establecer los valores en selectedNote
+            this.selectedNote.setStudent(student);
+            this.selectedNote.setTitle(title);
+            this.selectedNote.setBody(null);
+            this.selectedNote.setCreationDate(now);
+            this.selectedNote.setLastOpenedDate(now);
+            this.selectedNote.setLastModifiedDate(now);
+            this.selectedNote.setInTrash(false);
+            this.selectedNote.setDegreeCourses(selectedSubject); // Asignar el curso seleccionado
+
+            // Guardar la nota en la base de datos
+            dao.save(this.selectedNote);
+
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("selectedNote", this.selectedNote);
+            return "/notesWYSIWYG.xhtml?faces-redirect=true&includeViewParams=true";
+        } else {
+            updateNote(this.selectedNote);
+            // Manejar el caso donde no se seleccionó ningún curso
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Edición", "Nota editada correctamente."));
+            PrimeFaces.current().executeScript("PF('newNoteDialog').hide()");
+            PrimeFaces.current().ajax().update("notesForm:messages", "notesForm:dVnotes");
+            return null;
+        }
+    }
+
+    /* Método que abre en el procesador de texto una nota seleccionada, mostrando su contenido */
+    public String openNotesDoc() {
+        Long selectedNoteId = Long.valueOf(FacesContext.getCurrentInstance().getExternalContext()
+                .getRequestParameterMap().get("selectedNoteDoc"));
+
+        Optional<Notes> foundNote = this.notesList.stream()
+                .filter(note -> note.getId().equals(selectedNoteId)).findFirst();
+
+        if (foundNote.isPresent()) {
+            this.selectedNote = foundNote.get();
+
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("selectedNote", this.selectedNote);
+            return "/notesWYSIWYG.xhtml?faces-redirect=true&includeViewParams=true";
+        }
+
+        System.out.println("No funcionó");
+        return null;
+    }
+
+    /* Método que actualiza los atributos de una nota en base al contenido proporcionado */
+    public void updateNote(Notes note) {
         String content = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("documentBody");
 
-        if (!this.selectedNote.getBody().equals(content)) {
-            this.selectedNote.setBody(content);
+        if (!note.getBody().equals(content)) {
+            note.setBody(content);
+            note.setLastModifiedDate(LocalDateTime.now());
         }
-        this.selectedNote.setLastModifiedDate(LocalDateTime.now());
 
-        dao.update(this.selectedNote);
+        dao.update(note);
+
+        //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("selectedNote");
     }
 
     /* Método que actualiza el estado de una nota en base a la recuperación o eliminación de esta */
@@ -341,7 +428,6 @@ public class NoteBean implements Serializable {
     }
 
     /* Método que elimina definitivamente una nota seleccionada */
-
     public void deleteNote(Notes note) {
         dao.remove(note);
     }
@@ -356,14 +442,17 @@ public class NoteBean implements Serializable {
     }
 }
 
-// Método para inicializar un cuadro que enlista la(s) carrera(s) que cursa el estudiante
-    /*
-    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Mensaje", "Se seleccionó 'Rango de fecha'"));
-
-    public void CB_coursedPeriods(){
-        List<StudentSemestralPeriod> coursedPeriods = dao.get("StudentSemestralPeriod.FindByCIF",
-                StudentSemestralPeriod.class, student.getCIF());
-
-    public void CB_assignedCourses(){
-
-    }*/
+        /*
+        // Impresión de lista de cursos (por cuestiones de prueba)
+        System.out.println("Contenido de allPeriodCourses:");
+        for (SelectItem item : allPeriodCourses) {
+            if (item instanceof SelectItemGroup) {
+                System.out.println(((SelectItemGroup) item).getLabel());
+                for (SelectItem subItem : ((SelectItemGroup) item).getSelectItems()) {
+                    System.out.println("   " + subItem.getLabel() + ": " + subItem.getValue());
+                }
+            } else {
+                System.out.println(item.getLabel() + ": " + item.getValue());
+            }
+        }
+        */
