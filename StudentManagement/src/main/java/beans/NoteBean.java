@@ -3,7 +3,6 @@ package beans;
 import entities.DegreeCourses;
 import entities.Notes;
 import entities.Student;
-import entities.Test;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Stateless;
 import jakarta.faces.application.FacesMessage;

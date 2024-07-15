@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="JavaScriptLibraryMappings">
-    <file url="file://$PROJECT_DIR$" libraries="{css.gg, font-awesome, primeicons}" />
-    <file url="file://$PROJECT_DIR$/StudentManagement" libraries="{css.gg, font-awesome, primeicons}" />
-  </component>
-</project>

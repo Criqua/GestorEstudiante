@@ -23,7 +23,6 @@
                 <groupId>jakarta.platform</groupId>
                 <artifactId>jakarta.jakartaee-api</artifactId>
                 <version>10.0.0</version>
-                <!-- provide indica que el servidor lo proveerá  -->
                 <scope>provided</scope>
             </dependency>
         </dependencies>
