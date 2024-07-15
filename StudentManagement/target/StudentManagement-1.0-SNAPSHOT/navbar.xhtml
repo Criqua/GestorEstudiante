@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Inicio | ClassMate</title>
+    <!-- Enlace a head para usar Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://primefaces.org/showcase/ui/primeicons.css" />
+    <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css"/>
+    <!-- Recursos para utilización de fuentes de texto personalizadas -->
+    <link href="https://db.onlinewebfonts.com/c/9d23cda2fd2a195a8467e0967debd4d3?family=Cera+Round+Pro+Bold" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="resources/css/mMenu.css"/>
+</h:head>
+
+<h:body>
+    <p:panel style="text-align: left; margin-bottom: 5px;" styleClass="header-depth">
+        <p:commandLink action="#{navbarBean.redirectToHome}" process="@this" update="@form">
+            <p:outputPanel id="logoContent" style="display: inline-block; font-family: 'Cera Round Pro Bold', sans-serif;
+                           color: #495057; font-size: 18px; cursor: pointer">
+                <i class="fas fa-chalkboard-user icon"/>
+                <h:outputText value="ClassMate" style="margin-left: 5px; vertical-align: 2px;"/>
+            </p:outputPanel>
+            <p:tooltip for="logoContent" value="Volver a inicio" showEffect="clip" hideEffect="fold"/>
+        </p:commandLink>
+    </p:panel>
+
+    <p:menubar>
+    <!-- Espacio reservado para el nombre de usuario y foto de perfil-->
+    <p:menuitem onclick="PF('userProfileDialog').show()">
+        <div class="flex align-items-center flex-wrap">
+            <p:chip label="Cristian Gago" image="resources/images/defaultpfp.png" styleClass="mr-2"/>
+        </div>
+    </p:menuitem>
+
+    <p:divider layout="vertical"/>
+
+    <p:menuitem value="Mis notificaciones" icon="pi pi-fw pi-bell"/>
+    <f:facet name="options">
+        <div style="text-align: center; margin-top: 8px">
+            <p:commandButton value="Cerrar sesión" action="#{loginBean.logout()}" icon="pi pi-fw pi-sign-out" styleClass="ui-button-info" />
+        </div>
+    </f:facet>
+    </p:menubar>
+
+    <p:dialog header="Detalles del usuario" widgetVar="userProfileDialog" modal="true" resizable="false"
+              showEffect="slide" hideEffect="slide" draggable="false" styleClass="c-header">
+    <div class="user-profile-content">
+        <div class="left-section">
+            <!-- Sección de foto de perfil -->
+            <p:graphicImage name="images/defaultpfp.png" alt="Foto de perfil" styleClass="profile-image"/>
+        </div>
+        <div class="right-section">
+            <h4><span class="bold-text">Nombre de usuario</span></h4>
+            <p>Cristian Gago</p>
+
+            <h4><span class="bold-text">Correo electrónico</span></h4>
+            <p>cjgago@uamv.edu.ni</p>
+
+            <h4><span class="bold-text">Carreras cursadas</span></h4>
+            <p>Ingeniería en Sistemas de Información</p>
+        </div>
+    </div>
+    </p:dialog>
+</h:body>
+</html>
