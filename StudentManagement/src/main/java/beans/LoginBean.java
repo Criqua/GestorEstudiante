@@ -29,6 +29,10 @@ public class LoginBean implements Serializable {
         final IDAO dao = new ImplDAO();
         Student student = dao.findById(Student.class, cif);
 
+        System.out.println("CIF ingresado: " + cif);
+        System.out.println("Password ingresada: " + password);
+        System.out.println("Student encontrado: " + (student != null ? student.getFullName() : "null"));
+
         if (student != null && student.getPassword().equals(password)) {
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("user", student);
 

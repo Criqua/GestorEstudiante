@@ -50,6 +50,7 @@ public class Student {
             joinColumns = @JoinColumn(name = "CIF_Estudiante"),
             inverseJoinColumns = @JoinColumn(name = "ID_Carrera")
     )
+
     private List<Major> majorList;
 
     @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)

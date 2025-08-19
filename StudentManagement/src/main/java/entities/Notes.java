@@ -37,7 +37,7 @@ public class Notes {
     @Column(name = "Titulo")
     private String title;
 
-    @Column(name = "Contenido", nullable = true)
+    @Column(name = "Contenido_texto", nullable = true)
     private String body;
 
     @Column(name = "Fecha_creacion")

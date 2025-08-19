@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource name="jdbc/StudentManagement"
+              auth="Container"
+              type="javax.sql.DataSource"
+              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+              driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+              url="jdbc:sqlserver://localhost:1433;databaseName=GestorEstudiante;encrypt=true;trustServerCertificate=true"
+              username="${DB_USER}"
+              password="${DB_PASS}"
+              initialSize="5"
+              maxActive="25"
+              maxIdle="10"
+              minIdle="2"
+              maxWait="10000"
+              testOnBorrow="true"
+              validationQuery="SELECT 1"/>
+</Context>
